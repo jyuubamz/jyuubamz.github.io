@@ -77,19 +77,22 @@ async function searchObjekt() {
 // --- Up & Down buttons ---
 document.getElementById('upBtn').addEventListener('click', () => {
   let input = document.getElementById('searchInput');
-  let current = parseInt(input.value) || 0;
+  let current = parseInt(input.value) || 1; // default to 1 if empty/NaN
   input.value = current + 1;
   searchObjekt();
 });
 
 document.getElementById('downBtn').addEventListener('click', () => {
   let input = document.getElementById('searchInput');
-  let current = parseInt(input.value) || 0;
-  if (current > 0) input.value = current - 1;
+  let current = parseInt(input.value) || 1;
+  input.value = Math.max(1, current - 1); // never go below 1
   searchObjekt();
 });
 
-// Optional: trigger search when pressing Enter
-document.getElementById('searchInput').addEventListener('keypress', e => {
-  if (e.key === 'Enter') searchObjekt();
+// Optional: clamp value manually on blur (if user types a smaller number)
+document.getElementById('searchInput').addEventListener('blur', () => {
+  let input = document.getElementById('searchInput');
+  if (parseInt(input.value) < 1 || isNaN(input.value)) {
+    input.value = 1;
+  }
 });
