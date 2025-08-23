@@ -57,33 +57,60 @@ async function searchObjekt() {
     // Format ObjektNo with leading zeros
     function formatObjektNo(no) {
       if (!no) return '';
-      return '' + String(no).padStart(6, '0');
+      return '#' + String(no).padStart(6, '0');
     }
 
     const collectionNo = v1Data?.objekt?.collectionNo ?? '';
     const objektNoRaw = v1Data?.objekt?.objektNo ?? '';
+    const memberName = v1Data?.objekt?.member ?? '';  // adjust if API has member
+    const artist = (v1Data?.attributes || []).find(a => a.trait_type === "Artist")?.value ?? '';
     const objektNo = formatObjektNo(objektNoRaw);
 
     // use textColor from v1 JSON
     const textColor = v1Data?.objekt?.textColor ?? '#000000';
+    const borderColor = v1Data?.objekt?.backgroundColor ?? '#000000';
 
-    const overlayTextFront = `
-      <div class="overlay-border right" style="color:${textColor}">
-        <div class="overlay-line numbers">
-          <span class="collection-no">${collectionNo}</span>
-          <span class="objekt-no">#${objektNo}</span>
+    if (artist === "idntt") {
+      // Full overlay (member + numbers + group)
+      overlayTextFront = `
+        <div class="overlay-border right" style="background-color:${borderColor}; color:${textColor}">
+          <span class="overlay-line member">${memberName}</span>
+          <div class="overlay-line numbers">
+            <span class="collection-no">${collectionNo}</span>
+            <span class="objekt-no">${objektNo}</span>
+          </div>
+          <span class="overlay-line group">${artist}</span>
         </div>
-      </div>
-    `;
+      `;
 
-    const overlayTextBack = `
-      <div class="overlay-border left" style="color:${textColor}">
-        <div class="overlay-line numbers">
-          <span class="collection-no">${collectionNo}</span>
-          <span class="objekt-no">#${objektNo}</span>
+      overlayTextBack = `
+        <div class="overlay-border left" style="color:${textColor}">
+          <div class="overlay-line numbers">
+            <span class="collection-no">${collectionNo}</span>
+            <span class="objekt-no">${objektNo}</span>
+          </div>
         </div>
-      </div>
-    `;
+      `;
+    } else if (artist === "tripleS" || artist === "artms") {
+      // Minimal overlay (just numbers)
+      overlayTextFront = `
+        <div class="overlay-border right" style="color:${textColor}">
+          <div class="overlay-line numbers">
+            <span class="collection-no">${collectionNo}</span>
+            <span class="objekt-no">${objektNo}</span>
+          </div>
+        </div>
+      `;
+
+      overlayTextBack = `
+        <div class="overlay-border left" style="color:${textColor}">
+          <div class="overlay-line numbers">
+            <span class="collection-no">${collectionNo}</span>
+            <span class="objekt-no">${objektNo}</span>
+          </div>
+        </div>
+      `;
+    }
 
     resultEl.innerHTML = `
     <div class="card-container" onclick="this.querySelector('.card').classList.toggle('flipped')">
