@@ -3,7 +3,6 @@
 body {
     background: #000;
     color: #fff;
-    font-family: 'Orbitron', sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -28,7 +27,6 @@ input {
 }
 button {
     padding: 0.5rem 1rem;
-    /*margin-left: 0.5rem;*/
     border: none;
     border-radius: 8px;
     background: #ffdd00;
@@ -96,7 +94,6 @@ button {
 }
 .status {
     display: inline-block;
-    margin-left: 0.5rem;
     padding: 0 0.25rem;
     border-radius: 4px;
     font-size: 0.8rem;
@@ -137,5 +134,4 @@ th, td {
 }
 th {
     background: rgba(255,255,255,0.1);
-
 }
