@@ -54,19 +54,56 @@ async function searchObjekt() {
     const cosmoName  = v1Data.name || v3Data?.name || '—';
     const traits = (v1Data.attributes ?? []).map(a => `<div class="trait">${a.trait_type}: ${a.value}</div>`).join('');
 
-    resultEl.innerHTML = `
-      <div class="card-container" onclick="this.querySelector('.card').classList.toggle('flipped')">
-        <div class="card">
-          <div class="card-face front"><img src="${front}" alt="Front"></div>
-          <div class="card-face back"><img src="${back}" alt="Back"></div>
+    // Format ObjektNo with leading zeros
+    function formatObjektNo(no) {
+      if (!no) return '';
+      return '' + String(no).padStart(6, '0');
+    }
+
+    const collectionNo = v1Data?.objekt?.collectionNo ?? '';
+    const objektNoRaw = v1Data?.objekt?.objektNo ?? '';
+    const objektNo = formatObjektNo(objektNoRaw);
+
+    // use textColor from v1 JSON
+    const textColor = v1Data?.objekt?.textColor ?? '#000000';
+
+    const overlayTextFront = `
+      <div class="overlay-border right" style="color:${textColor}">
+        <div class="overlay-line numbers">
+          <span class="collection-no">${collectionNo}</span>
+          <span class="objekt-no">#${objektNo}</span>
         </div>
       </div>
-      <div class="info-boxes">
-        <div class="box">Abstract: ${abscanName}</div>
-        <div class="box">Cosmo: ${cosmoName} <span class="status minted">Minted</span></div>
+    `;
+
+    const overlayTextBack = `
+      <div class="overlay-border left" style="color:${textColor}">
+        <div class="overlay-line numbers">
+          <span class="collection-no">${collectionNo}</span>
+          <span class="objekt-no">#${objektNo}</span>
+        </div>
       </div>
-      <div class="traits">${traits}</div>
-      <p class="nil"></p>
+    `;
+
+    resultEl.innerHTML = `
+    <div class="card-container" onclick="this.querySelector('.card').classList.toggle('flipped')">
+      <div class="card">
+        <div class="card-face front">
+          <img src="${front}" alt="Front">
+          <div class="overlay-number">${overlayTextFront}</div>
+        </div>
+        <div class="card-face back">
+          <img src="${back}" alt="Back">
+          <div class="overlay-number">${overlayTextBack}</div>
+        </div>
+      </div>
+    </div>
+    <div class="info-boxes">
+      <div class="box">Abstract: ${abscanName}</div>
+      <div class="box">Cosmo: ${cosmoName} <span class="status minted">Minted</span></div>
+    </div>
+    <div class="traits">${traits}</div>
+    <p class="nil"></p>
     `;
   } catch (err) {
     console.error(err);
