@@ -39,8 +39,8 @@ async function searchObjekt() {
           </div>
         </div>
         <div class="info-boxes">
-          <div class="box" style="text-align:left">Abstract: ${name}</div>
-          <div class="box" style="text-align:right">Cosmo: <span class="status not-minted">Not Minted</span></div>
+          <div class="box">Abstract: ${name}</div>
+          <div class="box">Cosmo: <span class="status not-minted">Not Minted</span></div>
         </div>
         <div class="traits">${traits}</div>
         <p class="nil"></p>
@@ -62,8 +62,8 @@ async function searchObjekt() {
         </div>
       </div>
       <div class="info-boxes">
-        <div class="box" style="text-align:left">Abstract: ${abscanName}</div>
-        <div class="box" style="text-align:right">Cosmo: ${cosmoName} <span class="status minted">Minted</span></div>
+        <div class="box">Abstract: ${abscanName}</div>
+        <div class="box">Cosmo: ${cosmoName} <span class="status minted">Minted</span></div>
       </div>
       <div class="traits">${traits}</div>
       <p class="nil"></p>
@@ -77,7 +77,7 @@ async function searchObjekt() {
 // --- Up & Down buttons ---
 document.getElementById('upBtn').addEventListener('click', () => {
   let input = document.getElementById('searchInput');
-  let current = parseInt(input.value) || 1; // default to 1 if empty/NaN
+  let current = parseInt(input.value) || 0; // default to 1 if empty/NaN
   input.value = current + 1;
   searchObjekt();
 });
@@ -87,6 +87,10 @@ document.getElementById('downBtn').addEventListener('click', () => {
   let current = parseInt(input.value) || 1;
   input.value = Math.max(1, current - 1); // never go below 1
   searchObjekt();
+});
+
+document.getElementById('searchInput').addEventListener('keypress', e => {
+  if (e.key === 'Enter') searchObjekt();
 });
 
 // Optional: clamp value manually on blur (if user types a smaller number)
