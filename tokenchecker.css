@@ -132,8 +132,7 @@ button {
   position: absolute;
   font-family: 'HelveticaNeue', sans-serif;
   font-weight: 600;
-  margin-bottom: 250px;
-  padding-bottom: 50px;
+  text-indent: -185px;
 }
 .group {
   position: absolute;
@@ -199,3 +198,4 @@ th, td {
 th {
     background: rgba(255,255,255,0.1);
 }
+
