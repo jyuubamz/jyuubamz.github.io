@@ -92,7 +92,7 @@ button {
   position: absolute;
   top: 26px;
   right: 0;
-  height: 84%;
+  height: 86%;
   width: 26px; /* adjust thickness */
   display: flex;
   flex-direction: column;
@@ -197,4 +197,5 @@ th, td {
 }
 th {
     background: rgba(255,255,255,0.1);
+
 }
