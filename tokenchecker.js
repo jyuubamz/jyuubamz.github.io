@@ -25,7 +25,7 @@ async function searchObjekt() {
 
   try {
     if (!minted) {
-      const name = v3Data?.name ?? 'NIL';
+      const name = v3Data?.name ?? '';
       const traits = (v3Data?.attributes ?? []).map(a => `<div class="trait">${a.trait_type}: ${a.value}</div>`).join('');
       const front = v3Data?.image || '';
 
@@ -63,6 +63,7 @@ async function searchObjekt() {
     const collectionNo = v1Data?.objekt?.collectionNo ?? '';
     const objektNoRaw = v1Data?.objekt?.objektNo ?? '';
     const memberName = v1Data?.objekt?.member ?? '';  // adjust if API has member
+    const season = v1Data?.objekt?.season ?? '';
     const artist = (v1Data?.attributes || []).find(a => a.trait_type === "Artist")?.value ?? '';
     const objektNo = formatObjektNo(objektNoRaw);
 
@@ -70,10 +71,22 @@ async function searchObjekt() {
     const textColor = v1Data?.objekt?.textColor ?? '#000000';
     const borderColor = v1Data?.objekt?.backgroundColor ?? '#000000';
 
+    let borderClass = "overlay-border right"; // default
+    let borderStyle = `color:${textColor}`; // default
+
     if (artist === "idntt") {
-      // Full overlay (member + numbers + group)
+      // Special cases
+      if (collectionNo === "301Z" || collectionNo === "302Z") {
+        borderClass += " scoborder";
+      } else if (collectionNo === "401Z") {
+        borderClass += " ucoborder";
+      } else {
+        // default border color only if not special
+        borderStyle = `background-color:${borderColor}; color:${textColor}`;
+      }
+        
       overlayTextFront = `
-        <div class="overlay-border right" style="background-color:${borderColor}; color:${textColor}">
+        <div class="${borderClass}" style="${borderStyle}">
           <span class="overlay-line member">${memberName}</span>
           <div class="overlay-line numbers">
             <span class="collection-no">${collectionNo}</span>
@@ -92,9 +105,17 @@ async function searchObjekt() {
         </div>
       `;
     } else if (artist === "tripleS" || artist === "artms") {
+      // Special cases
+      if (memberName === "SeoYeon" && season === "Ever01" &&collectionNo === "338Z") {
+        sssborderStyle = `color:#07328d`;
+      } else {
+        // default border color only if not special
+        sssborderStyle = `color:${textColor}`;
+      }
+
       // Minimal overlay (just numbers)
       overlayTextFront = `
-        <div class="overlay-border right" style="color:${textColor}">
+        <div class="overlay-border right" style="${sssborderStyle}">
           <div class="overlay-line numbers">
             <span class="collection-no">${collectionNo}</span>
             <span class="objekt-no">${objektNo}</span>
@@ -103,7 +124,7 @@ async function searchObjekt() {
       `;
 
       overlayTextBack = `
-        <div class="overlay-border left" style="color:${textColor}">
+        <div class="overlay-border left" style="${sssborderStyle}">
           <div class="overlay-line numbers">
             <span class="collection-no">${collectionNo}</span>
             <span class="objekt-no">${objektNo}</span>
