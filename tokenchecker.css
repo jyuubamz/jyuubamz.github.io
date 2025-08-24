@@ -92,7 +92,7 @@ button {
   position: absolute;
   top: 26px;
   right: 0;
-  height: 86%;
+  height: 87%;
   width: 26px; /* adjust thickness */
   display: flex;
   flex-direction: column;
@@ -115,6 +115,82 @@ button {
   border-radius: 12px 0 0 12px;
 }
 
+/* Special border variants */
+.overlay-border.scoborder {
+  background: url("scoborder.png") no-repeat center / cover;
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 100%; /* adjust thickness */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 6px 2px 0px;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+
+  /* makes PNG follow border radius */
+  background-clip: padding-box;
+  overflow: hidden;
+}
+
+.overlay-border.scoborder .member {
+  position: absolute;
+  font-family: 'HelveticaNeue', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  text-indent: -190px;
+  padding: 1px;
+}
+.overlay-border.scoborder .group {
+  position: absolute;
+  font-family: 'HelveticaNeue', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  margin-top: 340px;
+  padding: 1px;
+}
+
+.overlay-border.ucoborder {
+  background: url("ucoborder.png") no-repeat center / cover;
+
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 100%; /* adjust thickness */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 6px 2px 0px;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+
+  /* makes PNG follow border radius */
+  background-clip: padding-box;
+  overflow: hidden;
+}
+
+.overlay-border.ucoborder .member {
+  position: absolute;
+  font-family: 'HelveticaNeue', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  text-indent: -190px;
+  padding: 1px;
+}
+.overlay-border.ucoborder .group {
+  position: absolute;
+  font-family: 'HelveticaNeue', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  margin-top: 340px;
+  padding: 1px;
+}
+
 /* Font handling */
 .collection-no {
   font-family: 'Inter', sans-serif;
@@ -131,14 +207,18 @@ button {
 .member {
   position: absolute;
   font-family: 'HelveticaNeue', sans-serif;
+  font-size: 15px;
   font-weight: 600;
-  text-indent: -182px;
+  text-indent: -186px;
+  padding: 1px;
 }
 .group {
   position: absolute;
   font-family: 'HelveticaNeue', sans-serif;
+  font-size: 15px;
   font-weight: 600;
   margin-top: 328px;
+  padding: 1px;
 }
 
 .info-boxes {
@@ -197,5 +277,4 @@ th, td {
 }
 th {
     background: rgba(255,255,255,0.1);
-
 }
