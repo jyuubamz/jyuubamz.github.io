@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Doto:wght@100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 @font-face {
   font-family: DotMatrix;
   src: url(DotMatrixNormal.ttf) format('truetype');
@@ -92,13 +93,12 @@ button {
   top: 26px;
   right: 0;
   height: 84%;
-  width: 25px; /* adjust thickness */
+  width: 26px; /* adjust thickness */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 4px;
-  border-radius: 0px 0px 0px 0px;
+  padding: 6px 6px 2px 0px;
   writing-mode: vertical-rl;
   text-orientation: mixed;
 }
@@ -132,13 +132,13 @@ button {
   position: absolute;
   font-family: 'HelveticaNeue', sans-serif;
   font-weight: 600;
-  text-indent: -185px;
+  text-indent: -182px;
 }
 .group {
   position: absolute;
   font-family: 'HelveticaNeue', sans-serif;
   font-weight: 600;
-  margin-top: 335px;
+  margin-top: 328px;
 }
 
 .info-boxes {
@@ -198,4 +198,3 @@ th, td {
 th {
     background: rgba(255,255,255,0.1);
 }
-
