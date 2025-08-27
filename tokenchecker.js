@@ -25,11 +25,17 @@ async function searchObjekt() {
 
   try {
     if (!minted) {
-      const name = v3Data?.name ?? '';
-      const traits = (v3Data?.attributes ?? []).map(a => `<div class="trait">${a.trait_type}: ${a.value}</div>`).join('');
+      //const name = v3Data?.name ?? 'NIL';
+      const seasonv3 = v3Data?.attributes?.find(a => a.trait_type === "Season")?.value ?? '';
+      const memberNamev3 = v3Data?.attributes?.find(a => a.trait_type === "Member")?.value ?? '';
+      const collectionNov3 = (v3Data?.attributes || []).find(a => a.trait_type === "Collection")?.value ?? '';
+      //const traits = (v3Data?.attributes ?? []).map(a => `<div class="trait">${a.trait_type}: ${a.value}</div>`).join('');
       const front = v3Data?.image || '';
 
       resultEl.innerHTML = `
+        <span class="ObjStatus">${seasonv3} ${memberNamev3} ${collectionNov3}</span> #??????<br>
+        <span class="status not-minted">NOT MINTED ON COSMO</span>
+        <p class="nil"></p>
         <div class="card-container">
           <div class="card">
             <div class="card-face front">
@@ -38,21 +44,15 @@ async function searchObjekt() {
             </div>
           </div>
         </div>
-        <div class="info-boxes">
-          <div class="box">Abstract: ${name}</div>
-          <div class="box">Cosmo: <span class="status not-minted">Not Minted</span></div>
-        </div>
-        <div class="traits">${traits}</div>
-        <p class="nil"></p>
       `;
       return;
     }
 
     const front = v1Data.objekt.frontImage;
     const back  = v1Data.objekt.backImage;
-    const abscanName = v3Data.name || v1Data?.name || '—';
+    //const abscanName = v3Data.name || v1Data?.name || '—';
     const cosmoName  = v1Data.name || v3Data?.name || '—';
-    const traits = (v1Data.attributes ?? []).map(a => `<div class="trait">${a.trait_type}: ${a.value}</div>`).join('');
+    //const traits = (v1Data.attributes ?? []).map(a => `<div class="trait">${a.trait_type}: ${a.value}</div>`).join('');
 
     // Format ObjektNo with leading zeros
     function formatObjektNo(no) {
@@ -64,6 +64,7 @@ async function searchObjekt() {
     const objektNoRaw = v1Data?.objekt?.objektNo ?? '';
     const memberName = v1Data?.objekt?.member ?? '';  // adjust if API has member
     const season = v1Data?.objekt?.season ?? '';
+
     const artist = (v1Data?.attributes || []).find(a => a.trait_type === "Artist")?.value ?? '';
     const objektNo = formatObjektNo(objektNoRaw);
 
@@ -134,6 +135,9 @@ async function searchObjekt() {
     }
 
     resultEl.innerHTML = `
+    <span class="ObjStatus">${season} ${memberName} ${collectionNo}</span> #${objektNoRaw}<br>
+    <span class="status minted">MINTED ON COSMO</span></div>
+    <p class="nil"></p>
     <div class="card-container" onclick="this.querySelector('.card').classList.toggle('flipped')">
       <div class="card">
         <div class="card-face front">
@@ -146,12 +150,6 @@ async function searchObjekt() {
         </div>
       </div>
     </div>
-    <div class="info-boxes">
-      <div class="box">Abstract: ${abscanName}</div>
-      <div class="box">Cosmo: ${cosmoName} <span class="status minted">Minted</span></div>
-    </div>
-    <div class="traits">${traits}</div>
-    <p class="nil"></p>
     `;
   } catch (err) {
     console.error(err);

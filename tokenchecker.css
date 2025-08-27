@@ -48,8 +48,10 @@ button {
     perspective: 1000px;
 }
 .card {
-    width: 291px;
-    height: 450px;
+    /*width: 291px;*/
+    /*height: 450px;*/
+    width: 320.1px;
+    height: 495px;
     position: relative;
     transform-style: preserve-3d;
     transition: transform 0.8s;
@@ -90,10 +92,10 @@ button {
 /* Vertical border strip */
 .overlay-border {
   position: absolute;
-  top: 26px;
+  top: 29px;
   right: 0;
   height: 87%;
-  width: 26px; /* adjust thickness */
+  width: 27px; /* adjust thickness */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -105,13 +107,13 @@ button {
 
 /* Right edge for front */
 .overlay-border.right {
-  right: 0;
+  right: 0px;
   border-radius: 12px 0px 0px 12px;
 }
 
 /* Left edge for back */
 .overlay-border.left {
-  right: 28px;
+  right: 31px;
   border-radius: 12px 0 0 12px;
 }
 
@@ -139,17 +141,17 @@ button {
 .overlay-border.scoborder .member {
   position: absolute;
   font-family: 'HelveticaNeue', sans-serif;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
-  text-indent: -190px;
+  text-indent: -208px;
   padding: 1px;
 }
 .overlay-border.scoborder .group {
   position: absolute;
   font-family: 'HelveticaNeue', sans-serif;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
-  margin-top: 340px;
+  margin-top: 375px;
   padding: 1px;
 }
 
@@ -177,17 +179,17 @@ button {
 .overlay-border.ucoborder .member {
   position: absolute;
   font-family: 'HelveticaNeue', sans-serif;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
-  text-indent: -190px;
+  text-indent: -208px;
   padding: 1px;
 }
 .overlay-border.ucoborder .group {
   position: absolute;
   font-family: 'HelveticaNeue', sans-serif;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
-  margin-top: 340px;
+  margin-top: 375px;
   padding: 1px;
 }
 
@@ -207,17 +209,17 @@ button {
 .member {
   position: absolute;
   font-family: 'HelveticaNeue', sans-serif;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
-  text-indent: -186px;
+  text-indent: -205px;
   padding: 1px;
 }
 .group {
   position: absolute;
   font-family: 'HelveticaNeue', sans-serif;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
-  margin-top: 328px;
+  margin-top: 370px;
   padding: 1px;
 }
 
@@ -237,6 +239,7 @@ button {
 }
 .status {
     display: inline-block;
+    width: 97%;
     padding: 0 0.25rem;
     border-radius: 4px;
     font-size: 0.8rem;
@@ -245,10 +248,15 @@ button {
 .status.minted {
     color: lime;
     border: 1px solid lime;
+    text-align: center;
 }
 .status.not-minted {
     color: red;
     border: 1px solid red;
+    text-align: center;
+}
+.ObjStatus {
+    color: #B09EF8;
 }
 .traits {
     margin-top: 1rem;
