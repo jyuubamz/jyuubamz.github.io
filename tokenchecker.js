@@ -40,7 +40,6 @@ async function searchObjekt() {
           <div class="card">
             <div class="card-face front">
               <img src="${front}" alt="Objekt">
-              <div class="overlay">?</div>
             </div>
           </div>
         </div>
@@ -182,4 +181,5 @@ document.getElementById('searchInput').addEventListener('blur', () => {
   if (parseInt(input.value) < 1 || isNaN(input.value)) {
     input.value = 1;
   }
+
 });
