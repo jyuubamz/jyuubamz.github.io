@@ -30,7 +30,7 @@ async function searchObjekt() {
       const memberNamev3 = v3Data?.attributes?.find(a => a.trait_type === "Member")?.value ?? '';
       const collectionNov3 = (v3Data?.attributes || []).find(a => a.trait_type === "Collection")?.value ?? '';
       //const traits = (v3Data?.attributes ?? []).map(a => `<div class="trait">${a.trait_type}: ${a.value}</div>`).join('');
-      const front = v3Data?.image || '';
+      const front = v3Data?.image || 'placeholder.png';
 
       resultEl.innerHTML = `
         <span class="ObjStatus">${seasonv3} ${memberNamev3} ${collectionNov3}</span> #??????<br>
@@ -181,5 +181,4 @@ document.getElementById('searchInput').addEventListener('blur', () => {
   if (parseInt(input.value) < 1 || isNaN(input.value)) {
     input.value = 1;
   }
-
 });
