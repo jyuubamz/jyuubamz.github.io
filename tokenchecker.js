@@ -25,11 +25,9 @@ async function searchObjekt() {
 
   try {
     if (!minted) {
-      //const name = v3Data?.name ?? 'NIL';
       const seasonv3 = v3Data?.attributes?.find(a => a.trait_type === "Season")?.value ?? '';
       const memberNamev3 = v3Data?.attributes?.find(a => a.trait_type === "Member")?.value ?? '';
       const collectionNov3 = (v3Data?.attributes || []).find(a => a.trait_type === "Collection")?.value ?? '';
-      //const traits = (v3Data?.attributes ?? []).map(a => `<div class="trait">${a.trait_type}: ${a.value}</div>`).join('');
       const front = v3Data?.image || 'placeholder.png';
 
       resultEl.innerHTML = `
@@ -49,9 +47,6 @@ async function searchObjekt() {
 
     const front = v1Data.objekt.frontImage;
     const back  = v1Data.objekt.backImage;
-    //const abscanName = v3Data.name || v1Data?.name || '—';
-    const cosmoName  = v1Data.name || v3Data?.name || '—';
-    //const traits = (v1Data.attributes ?? []).map(a => `<div class="trait">${a.trait_type}: ${a.value}</div>`).join('');
 
     // Format ObjektNo with leading zeros
     function formatObjektNo(no) {
@@ -80,6 +75,8 @@ async function searchObjekt() {
         borderClass += " scoborder";
       } else if (collectionNo === "401Z") {
         borderClass += " ucoborder";
+      } else if (collectionNo === "202A") {
+        borderClass += " omaborder";  
       } else {
         // default border color only if not special
         borderStyle = `background-color:${borderColor}; color:${textColor}`;
@@ -146,6 +143,7 @@ async function searchObjekt() {
         <div class="card-face back">
           <img src="${back}" alt="Back">
           <div class="overlay-number">${overlayTextBack}</div>
+          <img src="qrcode.png" alt="QR Code" class="qr-overlay">
         </div>
       </div>
     </div>
