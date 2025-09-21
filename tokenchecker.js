@@ -105,6 +105,8 @@ async function searchObjekt() {
       // Special cases
       if (memberName === "SeoYeon" && season === "Ever01" &&collectionNo === "338Z") {
         sssborderStyle = `color:#07328d`;
+      } else if (memberName === "YeonJi" || memberName === "Lynn" || memberName === "JooBin" && season === "Atom02" &&collectionNo === "361Z") {
+        sssborderStyle = `color:#000000`;
       } else {
         // default border color only if not special
         sssborderStyle = `color:${textColor}`;
