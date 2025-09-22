@@ -103,10 +103,10 @@ async function searchObjekt() {
       `;
     } else if (artist === "tripleS" || artist === "artms") {
       // Special cases
-      if (memberName === "SeoYeon" && season === "Ever01" &&collectionNo === "338Z") {
+      if (memberName === "SeoYeon" && season === "Ever01" && collectionNo === "338Z") {
         sssborderStyle = `color:#07328d`;
-      } else if (memberName === "YeonJi" || memberName === "Lynn" || memberName === "JooBin" && season === "Atom02" &&collectionNo === "361Z") {
-        sssborderStyle = `color:#000000`;
+      } else if (memberName === "HeeJin" && season === "Atom01" && collectionNo === "324Z" || collectionNo === "325Z") {
+        sssborderStyle = `color:#FFFFFF`;
       } else {
         // default border color only if not special
         sssborderStyle = `color:${textColor}`;
