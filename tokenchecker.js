@@ -164,10 +164,24 @@ document.getElementById('upBtn').addEventListener('click', () => {
   searchObjekt();
 });
 
+document.getElementById('up100Btn').addEventListener('click', () => {
+  let input = document.getElementById('searchInput');
+  let current = parseInt(input.value) || 0; // default to 1 if empty/NaN
+  input.value = current + 100;
+  searchObjekt();
+});
+
 document.getElementById('downBtn').addEventListener('click', () => {
   let input = document.getElementById('searchInput');
   let current = parseInt(input.value) || 1;
   input.value = Math.max(1, current - 1); // never go below 1
+  searchObjekt();
+});
+
+document.getElementById('down100Btn').addEventListener('click', () => {
+  let input = document.getElementById('searchInput');
+  let current = parseInt(input.value) || 1;
+  input.value = Math.max(1, current - 100); // never go below 1
   searchObjekt();
 });
 
