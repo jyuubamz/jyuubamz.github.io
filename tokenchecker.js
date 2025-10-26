@@ -31,7 +31,7 @@ async function searchObjekt() {
       const front = v3Data?.image || 'placeholder.png';
 
       resultEl.innerHTML = `
-        <span class="ObjStatus">${seasonv3} ${memberNamev3} ${collectionNov3}</span> #??????<br>
+        <span class="ObjStatus">${seasonv3} ${memberNamev3} ${collectionNov3}</span><br>
         <span class="status not-minted">NOT MINTED ON COSMO</span>
         <p class="nil"></p>
         <div class="card-container">

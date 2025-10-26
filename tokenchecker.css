@@ -327,3 +327,17 @@ button {
 .ObjStatus {
     color: #B09EF8;
 }
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* centers everything vertically if parent has height */
+  gap: 10px;
+}
+
+.up-buttons,
+.down-buttons {
+  display: flex;
+  gap: 5px;
+}
