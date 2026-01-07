@@ -75,7 +75,7 @@ async function searchObjekt() {
         borderClass += " scoborder";
       } else if (collectionNo === "401Z") {
         borderClass += " ucoborder";
-      } else if (collectionNo === "202A") {
+      } else if (season === "Summer25" && collectionNo === "202A" || season === "Winter26" && collectionNo === "201A") {
         borderClass += " omaborder";  
       } else {
         // default border color only if not special
