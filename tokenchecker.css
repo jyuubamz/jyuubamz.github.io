@@ -287,6 +287,20 @@ button {
   padding: 1px;
 }
 
+.group.idntt {
+  mask: url("idnttlogo.svg") no-repeat center / contain;
+  -webkit-mask: url("idnttlogo.svg") no-repeat center / contain;
+
+  background-color: var(--logo-color);
+
+  width: 36px;
+  height: 12px;
+  font-size: 0;
+  margin-right: -8px;
+  rotate: 90deg;
+  display: block;
+}
+
 .info-boxes {
     margin-top: 1rem;
     display: flex;

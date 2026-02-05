@@ -69,6 +69,8 @@ async function searchObjekt() {
     let borderClass = "overlay-border right"; // default
     let borderStyle = `color:${textColor}`; // default
 
+    const logoColor = v1Data?.objekt?.textColor ?? "#ffffff";
+
     if (artist === "idntt") {
       // Special cases
       if (collectionNo === "301Z" || collectionNo === "302Z") {
@@ -89,7 +91,7 @@ async function searchObjekt() {
             <span class="collection-no">${collectionNo}</span>
             <span class="objekt-no">${objektNo}</span>
           </div>
-          <span class="overlay-line group">${artist}</span>
+          <span class="overlay-line group idntt" style="--logo-color: ${logoColor}"></span>
         </div>
       `;
 
