@@ -273,7 +273,7 @@ button {
   position: absolute;
   font-family: 'HelveticaNeue', sans-serif;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 500;
   text-indent: -205px;
   padding: 1px;
 }
@@ -354,4 +354,5 @@ button {
 .down-buttons {
   display: flex;
   gap: 5px;
+
 }
