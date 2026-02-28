@@ -152,10 +152,10 @@ button {
 
 .overlay-border.scoborder .member {
   position: absolute;
-  font-family: 'HelveticaNeue', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 16px;
-  font-weight: 600;
-  text-indent: -208px;
+  font-weight: 700;
+  text-indent: -210px;
   padding: 1px;
 }
 
@@ -193,9 +193,9 @@ button {
   position: absolute;
   font-family: 'HelveticaNeue', sans-serif;
   font-size: 16px;
-  font-weight: 600;
-  text-indent: -208px;
-  padding: 1px;
+  font-weight: 700;
+  text-indent: -209px;
+  padding: 2px;
 }
 
 .overlay-border.ucoborder .group {
@@ -230,10 +230,10 @@ button {
 
 .overlay-border.omaborder .member {
   position: absolute;
-  font-family: 'HelveticaNeue', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 16px;
-  font-weight: 600;
-  text-indent: -208px;
+  font-weight: 700;
+  text-indent: -210px;
   padding: 1px;
 }
 
@@ -271,11 +271,10 @@ button {
 
 .member {
   position: absolute;
-  font-family: 'HelveticaNeue', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 16px;
-  font-weight: 500;
-  text-indent: -205px;
-  padding: 1px;
+  font-weight: 700;
+  text-indent: -207px;
 }
 
 .group {
@@ -356,3 +355,4 @@ button {
   gap: 5px;
 
 }
+
