@@ -159,10 +159,17 @@ async function searchObjekt() {
 }
 
 // --- Up & Down buttons ---
-document.getElementById('upBtn').addEventListener('click', () => {
+document.getElementById('up1Btn').addEventListener('click', () => {
   let input = document.getElementById('searchInput');
   let current = parseInt(input.value) || 0; // default to 1 if empty/NaN
   input.value = current + 1;
+  searchObjekt();
+});
+
+document.getElementById('up10Btn').addEventListener('click', () => {
+  let input = document.getElementById('searchInput');
+  let current = parseInt(input.value) || 0; // default to 1 if empty/NaN
+  input.value = current + 10;
   searchObjekt();
 });
 
@@ -173,10 +180,17 @@ document.getElementById('up100Btn').addEventListener('click', () => {
   searchObjekt();
 });
 
-document.getElementById('downBtn').addEventListener('click', () => {
+document.getElementById('down1Btn').addEventListener('click', () => {
   let input = document.getElementById('searchInput');
   let current = parseInt(input.value) || 1;
   input.value = Math.max(1, current - 1); // never go below 1
+  searchObjekt();
+});
+
+document.getElementById('down10Btn').addEventListener('click', () => {
+  let input = document.getElementById('searchInput');
+  let current = parseInt(input.value) || 1;
+  input.value = Math.max(1, current - 10); // never go below 1
   searchObjekt();
 });
 
