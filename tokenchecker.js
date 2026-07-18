@@ -1,214 +1,217 @@
-function serialFromV1(v1){
-  return String(
-    v1?.objekt?.objektNo ??
-    v1?.objekt?.tokenId ??
-    (v1?.name?.match(/#(\d+)/)?.[1] ?? '')
-  ).replace(/^#/, '');
+const resultEl = document.getElementById("result");
+const searchInput = document.getElementById("searchInput");
+
+async function fetchObjekt(id) {
+  const url = `https://api.cosmo.fans/bff/v3/objekts/nft-metadata/${encodeURIComponent(id)}`;
+
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    return null;
+  }
+
+  return await response.json();
+}
+
+function getAttributes(data) {
+  return Object.fromEntries(
+    (data.attributes ?? []).map((attr) => [attr.trait_type, attr.value]),
+  );
+}
+
+function getSpecialStyle(artist, season, member, collection) {
+
+    let style = { ...DEFAULT_STYLE };
+
+    for (const rule of SPECIAL_STYLES) {
+
+        if (rule.artist && rule.artist !== artist) continue;
+
+        if (rule.season && rule.season !== season) continue;
+
+        // Single member
+        if (rule.member && rule.member !== member) continue;
+
+        // Multiple members
+        if (rule.members && !rule.members.includes(member)) continue;
+
+        if (rule.collections && !rule.collections.includes(collection)) continue;
+
+        style = {
+            ...style,
+            ...rule.style
+        };
+    }
+
+    return style;
+}
+
+function createIdnttOverlay(member, season, collection, backgroundColor) {
+  let borderClass = "overlay-border right";
+  let borderStyle = `background-color:${backgroundColor}; color:${DEFAULT_STYLE.text}`;
+
+  if (collection === "301Z" || collection === "302Z") {
+    borderClass += " scoborder";
+    borderStyle = `color:${DEFAULT_STYLE.text}`;
+  } else if (collection === "401Z") {
+    borderClass += " ucoborder";
+    borderStyle = `color:#000000`;
+  } else if (
+    (season === "Summer25" && collection === "202A") ||
+    (season === "Winter26" && collection === "201A") ||
+    (season === "Summer26" && collection === "201A") ||
+    (season === "Summer26" && collection === "402A")
+  ) {
+    borderClass += " omaborder";
+    borderStyle = `color:${DEFAULT_STYLE.text}`;
+  }
+
+  return `
+        <div class="${borderClass}" style="${borderStyle}">
+            <span class="overlay-line member">${member}</span>
+
+            <div class="overlay-line numbers">
+                <span class="collection-no">${collection}</span>
+            </div>
+
+            <span
+                class="overlay-line group idntt"
+                style="--logo-color:${DEFAULT_STYLE.logo}">
+            </span>
+        </div>
+    `;
+}
+
+function createTripleSOverlay(artist, member, season, collection) {
+
+    const style = getSpecialStyle(
+        artist,
+        season,
+        member,
+        collection
+    );
+
+    return `
+        <div class="overlay-border right" style="color:${style.text}">
+            <div class="overlay-line numbers">
+                <span class="collection-no">${collection}</span>
+            </div>
+        </div>
+    `;
+}
+
+function createOverlay(attrs, data) {
+  const backgroundColor = data.background_color ?? "#000000";
+
+  if (attrs.Artist === "idntt") {
+    return createIdnttOverlay(
+        attrs.Member,
+        attrs.Season,
+        attrs.Collection,
+        backgroundColor
+    );
+  }
+
+  return createTripleSOverlay(attrs.Artist, attrs.Member, attrs.Season, attrs.Collection);
+}
+
+function renderCard(data) {
+  const attrs = getAttributes(data);
+
+  const overlay = createOverlay(attrs, data);
+
+  resultEl.innerHTML = `
+        <span class="ObjStatus">
+            ${attrs.Season} ${attrs.Member} ${attrs.Collection}
+        </span>
+        <br>
+
+        <span class="status minted">
+            MINTED ON COSMO
+        </span>
+
+        <p class="nil"></p>
+
+        <div class="card-container">
+
+            <div class="card">
+
+                <div class="card-face front">
+
+                  <img
+                      src="${data.image}"
+                      alt="${attrs.Member}"
+                  >
+
+                  <div class="overlay-number">
+                      ${overlay}
+                  </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    `;
 }
 
 async function searchObjekt() {
-  const id = document.getElementById('searchInput').value.trim();
-  if (!id) return;
+  const id = searchInput.value.trim();
 
-  const v1Url = `https://api.cosmo.fans/objekt/v1/token/${encodeURIComponent(id)}`;
-  const v3Url = `https://api.cosmo.fans/bff/v3/objekts/nft-metadata/${encodeURIComponent(id)}`;
-  const resultEl = document.getElementById('result');
+  if (!id) {
+    return;
+  }
 
-  resultEl.innerHTML = `<p class="nil">Loading…</p>`;
-
-  let v1Data = null, v3Data = null;
-  const [v1Res, v3Res] = await Promise.allSettled([fetch(v1Url), fetch(v3Url)]);
-  if (v1Res.status === 'fulfilled' && v1Res.value.ok) v1Data = await v1Res.value.json().catch(()=>null);
-  if (v3Res.status === 'fulfilled' && v3Res.value.ok) v3Data = await v3Res.value.json().catch(()=>null);
-
-  const minted = Boolean(v1Data?.objekt?.backImage);
+  resultEl.innerHTML = `<p class="nil">Loading...</p>`;
 
   try {
-    if (!minted) {
-      const seasonv3 = v3Data?.attributes?.find(a => a.trait_type === "Season")?.value ?? '';
-      const memberNamev3 = v3Data?.attributes?.find(a => a.trait_type === "Member")?.value ?? '';
-      const collectionNov3 = (v3Data?.attributes || []).find(a => a.trait_type === "Collection")?.value ?? '';
-      const front = v3Data?.image || 'placeholder.png';
+    const data = await fetchObjekt(id);
 
-      resultEl.innerHTML = `
-        <span class="ObjStatus">${seasonv3} ${memberNamev3} ${collectionNov3}</span><br>
-        <span class="status not-minted">NOT MINTED ON COSMO</span>
-        <p class="nil"></p>
-        <div class="card-container">
-          <div class="card">
-            <div class="card-face front">
-              <img src="${front}" alt="Objekt">
-            </div>
-          </div>
-        </div>
-      `;
+    if (!data) {
+      resultEl.innerHTML = `<p class="nil">Not minted</p>`;
+
       return;
     }
 
-    const front = v1Data.objekt.frontImage;
-    const back  = v1Data.objekt.backImage;
-
-    // Format ObjektNo with leading zeros
-    function formatObjektNo(no) {
-      if (!no) return '';
-      return '#' + String(no).padStart(6, '0');
-    }
-
-    const collectionNo = v1Data?.objekt?.collectionNo ?? '';
-    const objektNoRaw = v1Data?.objekt?.objektNo ?? '';
-    const memberName = v1Data?.objekt?.member ?? '';  // adjust if API has member
-    const season = v1Data?.objekt?.season ?? '';
-
-    const artist = (v1Data?.attributes || []).find(a => a.trait_type === "Artist")?.value ?? '';
-    const objektNo = formatObjektNo(objektNoRaw);
-
-    // use textColor from v1 JSON
-    const textColor = v1Data?.objekt?.textColor ?? '#000000';
-    const borderColor = v1Data?.objekt?.backgroundColor ?? '#000000';
-
-    let borderClass = "overlay-border right"; // default
-    let borderStyle = `color:${textColor}`; // default
-
-    const logoColor = v1Data?.objekt?.textColor ?? "#ffffff";
-
-    if (artist === "idntt") {
-      // Special cases
-      if (collectionNo === "301Z" || collectionNo === "302Z") {
-        borderClass += " scoborder";
-      } else if (collectionNo === "401Z") {
-        borderClass += " ucoborder";
-      } else if (season === "Summer25" && collectionNo === "202A" || season === "Winter26" && collectionNo === "201A") {
-        borderClass += " omaborder";  
-      } else {
-        // default border color only if not special
-        borderStyle = `background-color:${borderColor}; color:${textColor}`;
-      }
-        
-      overlayTextFront = `
-        <div class="${borderClass}" style="${borderStyle}">
-          <span class="overlay-line member">${memberName}</span>
-          <div class="overlay-line numbers">
-            <span class="collection-no">${collectionNo}</span>
-            <span class="objekt-no">${objektNo}</span>
-          </div>
-          <span class="overlay-line group idntt" style="--logo-color: ${logoColor}"></span>
-        </div>
-      `;
-
-      overlayTextBack = `
-        <div class="overlay-border left" style="color:${textColor}">
-          <div class="overlay-line numbers">
-            <span class="collection-no">${collectionNo}</span>
-            <span class="objekt-no">${objektNo}</span>
-          </div>
-        </div>
-      `;
-    } else if (artist === "tripleS" || artist === "artms") {
-      // Special cases
-      if (memberName === "SeoYeon" && season === "Ever01" && collectionNo === "338Z") {
-        sssborderStyle = `color:#07328d`;
-      } else if (memberName === "HeeJin" && season === "Atom01" && collectionNo === "324Z" || collectionNo === "325Z") {
-        sssborderStyle = `color:#FFFFFF`;
-      } else {
-        // default border color only if not special
-        sssborderStyle = `color:${textColor}`;
-      }
-
-      // Minimal overlay (just numbers)
-      overlayTextFront = `
-        <div class="overlay-border right" style="${sssborderStyle}">
-          <div class="overlay-line numbers">
-            <span class="collection-no">${collectionNo}</span>
-            <span class="objekt-no">${objektNo}</span>
-          </div>
-        </div>
-      `;
-
-      overlayTextBack = `
-        <div class="overlay-border left" style="${sssborderStyle}">
-          <div class="overlay-line numbers">
-            <span class="collection-no">${collectionNo}</span>
-            <span class="objekt-no">${objektNo}</span>
-          </div>
-        </div>
-      `;
-    }
-
-    resultEl.innerHTML = `
-    <span class="ObjStatus">${season} ${memberName} ${collectionNo}</span> #${objektNoRaw}<br>
-    <span class="status minted">MINTED ON COSMO</span></div>
-    <p class="nil"></p>
-    <div class="card-container" onclick="this.querySelector('.card').classList.toggle('flipped')">
-      <div class="card">
-        <div class="card-face front">
-          <img src="${front}" alt="Front">
-          <div class="overlay-number">${overlayTextFront}</div>
-        </div>
-        <div class="card-face back">
-          <img src="${back}" alt="Back">
-          <div class="overlay-number">${overlayTextBack}</div>
-          <img src="qrcode.png" alt="QR Code" class="qr-overlay">
-        </div>
-      </div>
-    </div>
-    `;
+    renderCard(data);
   } catch (err) {
     console.error(err);
-    resultEl.innerHTML = `<p class="error">Error rendering data.</p>`;
+
+    resultEl.innerHTML = `<p class="error">Error loading Objekt.</p>`;
   }
 }
 
-// --- Up & Down buttons ---
-document.getElementById('up1Btn').addEventListener('click', () => {
-  let input = document.getElementById('searchInput');
-  let current = parseInt(input.value) || 0; // default to 1 if empty/NaN
-  input.value = current + 1;
+function changeToken(delta) {
+  const current = Number(searchInput.value) || 1;
+
+  searchInput.value = Math.max(1, current + delta);
+
   searchObjekt();
+}
+
+[
+  ["up1Btn", 1],
+  ["up10Btn", 10],
+  ["up100Btn", 100],
+  ["down1Btn", -1],
+  ["down10Btn", -10],
+  ["down100Btn", -100],
+].forEach(([id, delta]) => {
+  document
+    .getElementById(id)
+    .addEventListener("click", () => changeToken(delta));
 });
 
-document.getElementById('up10Btn').addEventListener('click', () => {
-  let input = document.getElementById('searchInput');
-  let current = parseInt(input.value) || 0; // default to 1 if empty/NaN
-  input.value = current + 10;
-  searchObjekt();
+searchInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    searchObjekt();
+  }
 });
 
-document.getElementById('up100Btn').addEventListener('click', () => {
-  let input = document.getElementById('searchInput');
-  let current = parseInt(input.value) || 0; // default to 1 if empty/NaN
-  input.value = current + 100;
-  searchObjekt();
-});
+searchInput.addEventListener("blur", () => {
+  const value = Number(searchInput.value);
 
-document.getElementById('down1Btn').addEventListener('click', () => {
-  let input = document.getElementById('searchInput');
-  let current = parseInt(input.value) || 1;
-  input.value = Math.max(1, current - 1); // never go below 1
-  searchObjekt();
-});
-
-document.getElementById('down10Btn').addEventListener('click', () => {
-  let input = document.getElementById('searchInput');
-  let current = parseInt(input.value) || 1;
-  input.value = Math.max(1, current - 10); // never go below 1
-  searchObjekt();
-});
-
-document.getElementById('down100Btn').addEventListener('click', () => {
-  let input = document.getElementById('searchInput');
-  let current = parseInt(input.value) || 1;
-  input.value = Math.max(1, current - 100); // never go below 1
-  searchObjekt();
-});
-
-document.getElementById('searchInput').addEventListener('keypress', e => {
-  if (e.key === 'Enter') searchObjekt();
-});
-
-// Optional: clamp value manually on blur (if user types a smaller number)
-document.getElementById('searchInput').addEventListener('blur', () => {
-  let input = document.getElementById('searchInput');
-  if (parseInt(input.value) < 1 || isNaN(input.value)) {
-    input.value = 1;
+  if (!value || value < 1) {
+    searchInput.value = 1;
   }
 });
