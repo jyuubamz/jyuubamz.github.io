@@ -20,50 +20,47 @@ function getAttributes(data) {
 }
 
 function getSpecialStyle(artist, season, member, collection) {
+  let style = { ...DEFAULT_STYLE };
 
-    let style = { ...DEFAULT_STYLE };
+  for (const rule of SPECIAL_STYLES) {
+    if (rule.artist && rule.artist !== artist) continue;
 
-    for (const rule of SPECIAL_STYLES) {
+    if (rule.season && rule.season !== season) continue;
 
-        if (rule.artist && rule.artist !== artist) continue;
+    // Single member
+    if (rule.member && rule.member !== member) continue;
 
-        if (rule.season && rule.season !== season) continue;
+    // Multiple members
+    if (rule.members && !rule.members.includes(member)) continue;
 
-        // Single member
-        if (rule.member && rule.member !== member) continue;
+    if (rule.collections && !rule.collections.includes(collection)) continue;
 
-        // Multiple members
-        if (rule.members && !rule.members.includes(member)) continue;
+    style = {
+      ...style,
+      ...rule.style,
+    };
+  }
 
-        if (rule.collections && !rule.collections.includes(collection)) continue;
-
-        style = {
-            ...style,
-            ...rule.style
-        };
-    }
-
-    return style;
+  return style;
 }
 
-function createIdnttOverlay(member, season, collection, backgroundColor) {
+function createIdnttOverlay(
+  member,
+  season,
+  collection,
+  backgroundColor,
+  style,
+) {
   let borderClass = "overlay-border right";
-  let borderStyle = `background-color:${backgroundColor}; color:${DEFAULT_STYLE.text}`;
 
-  if (collection === "301Z" || collection === "302Z") {
-    borderClass += " scoborder";
-    borderStyle = `color:${DEFAULT_STYLE.text}`;
-  } else if (collection === "401Z") {
-    borderClass += " ucoborder";
-    borderStyle = `color:#000000`;
-  } else if (
-    (season === "Summer25" && collection === "202A") ||
-    (season === "Winter26" && collection === "201A") ||
-    (season === "Summer26" && collection === "201A") ||
-    (season === "Summer26" && collection === "402A")
-  ) {
-    borderClass += " omaborder";
-    borderStyle = `color:${DEFAULT_STYLE.text}`;
+  if (style.borderClass) {
+    borderClass += ` ${style.borderClass}`;
+  }
+
+  let borderStyle = `color:${style.text}`;
+
+  if (!style.borderClass) {
+    borderStyle += `; background-color:${backgroundColor}`;
   }
 
   return `
@@ -76,22 +73,14 @@ function createIdnttOverlay(member, season, collection, backgroundColor) {
 
             <span
                 class="overlay-line group idntt"
-                style="--logo-color:${DEFAULT_STYLE.logo}">
+                style="--logo-color:${style.logo}">
             </span>
         </div>
     `;
 }
 
-function createTripleSOverlay(artist, member, season, collection) {
-
-    const style = getSpecialStyle(
-        artist,
-        season,
-        member,
-        collection
-    );
-
-    return `
+function createTripleSOverlay(member, collection, style) {
+  return `
         <div class="overlay-border right" style="color:${style.text}">
             <div class="overlay-line numbers">
                 <span class="collection-no">${collection}</span>
@@ -103,16 +92,24 @@ function createTripleSOverlay(artist, member, season, collection) {
 function createOverlay(attrs, data) {
   const backgroundColor = data.background_color ?? "#000000";
 
+  const style = getSpecialStyle(
+    attrs.Artist,
+    attrs.Season,
+    attrs.Member,
+    attrs.Collection,
+  );
+
   if (attrs.Artist === "idntt") {
     return createIdnttOverlay(
-        attrs.Member,
-        attrs.Season,
-        attrs.Collection,
-        backgroundColor
+      attrs.Member,
+      attrs.Season,
+      attrs.Collection,
+      backgroundColor,
+      style,
     );
   }
 
-  return createTripleSOverlay(attrs.Artist, attrs.Member, attrs.Season, attrs.Collection);
+  return createTripleSOverlay(attrs.Member, attrs.Collection, style);
 }
 
 function renderCard(data) {
@@ -171,9 +168,13 @@ async function searchObjekt() {
       resultEl.innerHTML = `<p class="nil">Not minted</p>`;
 
       return;
+      document.getElementById("openseaBtn").disabled = true;
+      document.getElementById("abscanBtn").disabled = true;s
     }
 
     renderCard(data);
+    document.getElementById("openseaBtn").disabled = false;
+    document.getElementById("abscanBtn").disabled = false;
   } catch (err) {
     console.error(err);
 
@@ -215,3 +216,28 @@ searchInput.addEventListener("blur", () => {
     searchInput.value = 1;
   }
 });
+
+function openOpenSea() {
+    const id = searchInput.value.trim();
+
+    if (!id) return;
+
+    window.open(
+        `https://opensea.io/item/abstract/0x99bb83ae9bb0c0a6be865cacf67760947f91cb70/${encodeURIComponent(id)}?activityTypes=all`,
+        "_blank"
+    );
+}
+
+function openAbscan() {
+    const id = searchInput.value.trim();
+
+    if (!id) return;
+
+    window.open(
+        `https://abscan.org/token/0x99bb83ae9bb0c0a6be865cacf67760947f91cb70?a=${encodeURIComponent(id)}#transactions`,
+        "_blank"
+    );
+}
+
+document.getElementById("openseaBtn").addEventListener("click", openOpenSea);
+document.getElementById("abscanBtn").addEventListener("click", openAbscan);

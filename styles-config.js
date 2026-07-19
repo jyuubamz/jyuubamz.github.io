@@ -1,8 +1,6 @@
 const DEFAULT_STYLE = {
     text: "#000000",
-    logo: "#FFFFFF",
-    borderClass: "",
-    background: null
+    logo: "#000000"
 };
 
 const SPECIAL_STYLES = [
@@ -87,6 +85,184 @@ const SPECIAL_STYLES = [
             text: "#FFFFFF"
         }
     },
+
+    {   //WHITE ARTMS ATOM01
+        artist: "ARTMS",
+        season: "Atom01",
+        collections: ["303Z", "305Z", "306Z", "307Z", "308Z", "309Z", "310Z", "311Z", "312Z", "313Z", "314Z", "322Z", "323Z", "324Z", "325Z", "328Z", "329Z", "334Z", "335Z", "336Z", "337A", "338Z", "339A", "342Z", "343Z", "344Z", "347Z", "348Z", "349Z", "350Z", "351Z"],
+        style: {
+            text: "#FFFFFF"
+        }
+    },
+
+    {   //WHITE ARTMS BINARY01
+        artist: "ARTMS",
+        season: "Binary01",
+        collections: ["309Z", "311Z"],
+        style: {
+            text: "#FFFFFF"
+        }
+    },
+
+    {   //WHITE ARTMS CREAM01
+        artist: "ARTMS",
+        season: "Cream01",
+        collections: ["302Z", "303Z", "304Z", "305Z", "306Z", "307Z", "308Z", "309A", "310A", "311A", "312A", "313A", "314A", "315A", "316A", "326Z", "327Z", "328Z", "329Z", "330Z", "331Z", "332Z", "336Z", "337Z", "338Z", "342A", "343A", "344A", "345A", "346A", "347A", "348A", "349A", "350A", "353Z", "356Z", "357Z", "358Z", "401Z"],
+        style: {
+            text: "#FFFFFF"
+        }
+    },
+
+    {   //WHITE ARTMS DIVINE01
+        artist: "ARTMS",
+        season: "Divine01",
+        collections: ["301A", "302A", "303A", "308Z", "309Z", "310Z", "311Z", "313Z", "319Z", "321Z", "325Z", "344A", "345A", "346A", "401A"],
+        style: {
+            text: "#FFFFFF"
+        }
+    },
+
+    {   //WHITE ARTMS EVER01
+        artist: "ARTMS",
+        season: "Ever01",
+        collections: ["302Z", "303A", "304A", "305A", "306A", "307Z", "308Z", "309Z", "310Z", "320Z", "321Z", "322Z", "332Z", "333Z", "334Z", "335Z", "336Z", "338Z", "339Z", "340Z", "401Z"],
+        style: {
+            text: "#FFFFFF"
+        }
+    },
+
+    {   //WHITE ARTMS ATOM02
+        artist: "ARTMS",
+        season: "Atom02",
+        collections: ["304Z", "305Z", "306Z", "307Z", "309Z", "310Z", "311Z", "312Z", "313Z", "314Z", "315Z", "316Z", "317Z", "318Z", "319Z", "320Z", "321Z", "322Z", "323Z", "324Z", "325Z", "326Z", "401Z"],
+        style: {
+            text: "#FFFFFF"
+        }
+    },
+
+    {   
+        artist: "idntt",
+        collections: ["200Z"],
+        style: {
+            text: "#FFFFFF",
+            logo: "#FFFFFF"
+        }
+    },
+
+    {
+        artist: "idntt",
+        season: "Summer25",
+        collections: ["202A"],
+        style: {
+            borderClass: "omaborder",
+            text: "#ffffff",
+            logo: "#FFFFFF",
+            background: 'url("omaborder.png") no-repeat center / cover'
+        }
+    },
+
+    {
+        artist: "idntt",
+        season: "Winter26",
+        collections: ["201A"],
+        style: {
+            borderClass: "omaborder",
+            text: "#ffffff",
+            logo: "#FFFFFF",
+            background: 'url("omaborder.png") no-repeat center / cover'
+        }
+    },
+
+    {
+        artist: "idntt",
+        season: "Summer26",
+        collections: ["201A", "402A"],
+        style: {
+            borderClass: "omaborder",
+            text: "#ffffff",
+            logo: "#FFFFFF",
+            background: 'url("omaborder.png") no-repeat center / cover'
+        }
+    },
+
+    {   
+        artist: "idntt",
+        collections: ["301Z","302Z"],
+        style: {
+            borderClass: "scoborder",
+            background: 'url("scoborder.png") no-repeat center / cover'
+        }
+    },
+
+    {   
+        artist: "idntt",
+        collections: ["401Z"],
+        style: {
+            borderClass: "ucoborder",
+            background: 'url("ucoborder.png") no-repeat center / cover'
+        }
+    },
+
+    {   //WHITE idntt Spring25
+        artist: "idntt",
+        season: "Spring25",
+        collections: ["201Z", "202Z", "203Z", "204Z", "205Z", "206Z", "207Z", "208Z", "209Z", "210Z", "211Z", "212Z", "213Z", "214Z", "215Z", "216Z", "217Z", "218Z", "219Z", "220Z", "221Z", "222Z", "223Z", "224Z", "225Z"],
+        style: {
+            text: "#FFFFFF",
+            logo: "#FFFFFF"
+        }
+    },
+
+    {   //WHITE idntt Summer25
+        artist: "idntt",
+        season: "Summer25",
+        collections: ["203A", "204A", "205A", "214A", "215A", "218Z", "219Z"],
+        style: {
+            text: "#FFFFFF",
+            logo: "#FFFFFF"
+        }
+    },
+
+    {   //WHITE idntt Autumn25
+        artist: "idntt",
+        season: "Autumn25",
+        collections: ["202Z", "203Z", "204Z", "214Z"],
+        style: {
+            text: "#FFFFFF",
+            logo: "#FFFFFF"
+        }
+    },
+
+    {   //WHITE idntt Winter26
+        artist: "idntt",
+        season: "Winter26",
+        collections: ["202A", "203A", "204A", "213A", "214A", "216Z", "220Z", "228Z", "229Z"],
+        style: {
+            text: "#FFFFFF",
+            logo: "#FFFFFF"
+        }
+    },
+
+    {   //WHITE idntt Spring26
+        artist: "idntt",
+        season: "Spring26",
+        collections: ["219Z"],
+        style: {
+            text: "#FFFFFF",
+            logo: "#FFFFFF"
+        }
+    },
+
+    {   //WHITE idntt Summer26
+        artist: "idntt",
+        season: "Summer26",
+        collections: ["202A", "203A", "208A", "209A", "210A", "211A"],
+        style: {
+            text: "#FFFFFF",
+            logo: "#FFFFFF"
+        }
+    },
+
 
     {   
         artist: "tripleS",
@@ -472,6 +648,15 @@ const SPECIAL_STYLES = [
         }
     },
 
+    {   
+        artist: "tripleS",
+        season: "Atom02",
+        collections: ["325Z"],
+        style: {
+            text: "#F7F9F3"
+        }
+    },
+
     {
         artist: "tripleS",
         season: "Atom02",
@@ -770,6 +955,546 @@ const SPECIAL_STYLES = [
         collections: ["320Z"],
         style: {
             text: "#FAD400"
+        }
+    },
+
+    {
+        artist: "ARTMS",
+        season: "Atom01",
+        collections: ["304Z"],
+        style: {
+            text: "#2DA8A1"
+        }
+    },
+
+    {   
+        artist: "ARTMS",
+        season: "Atom01",
+        collections: ["326Z", "327Z"],
+        style: {
+            text: "#2BA8A2"
+        }
+    },
+
+    {   
+        artist: "ARTMS",
+        season: "Atom01",
+        collections: ["330Z", "331Z", "332Z", "333Z"],
+        style: {
+            text: "#2F2725"
+        }
+    },
+
+    {   
+        artist: "ARTMS",
+        season: "Atom01",
+        collections: ["340Z", "341Z"],
+        style: {
+            text: "#E293B5"
+        }
+    },
+
+    {   
+        artist: "ARTMS",
+        season: "Binary01",
+        collections: ["304A", "305A", "306A", "307A"],
+        style: {
+            text: "#46117F"
+        }
+    },
+
+    {   
+        artist: "ARTMS",
+        season: "Binary01",
+        collections: ["308Z"],
+        style: {
+            text: "#C7E8FF"
+        }
+    },
+
+    {   
+        artist: "ARTMS",
+        season: "Binary01",
+        collections: ["310Z"],
+        style: {
+            text: "#532AAD"
+        }
+    },
+
+    {   
+        artist: "ARTMS",
+        season: "Binary01",
+        collections: ["312Z", "313A"],
+        style: {
+            text: "#E1CFFF"
+        }
+    },
+
+    {   
+        artist: "ARTMS",
+        season: "Binary01",
+        collections: ["314Z", "315Z", "316Z"],
+        style: {
+            text: "#1D71A0"
+        }
+    },
+
+    {   
+        artist: "ARTMS",
+        season: "Binary01",
+        collections: ["317Z"],
+        style: {
+            text: "#2B3D58"
+        }
+    },
+
+    {   
+        artist: "ARTMS",
+        season: "Binary01",
+        collections: ["318Z", "319Z"],
+        style: {
+            text: "#FF008A"
+        }
+    },
+
+    {   
+        artist: "ARTMS",
+        season: "Binary01",
+        collections: ["320Z", "321Z", "323Z", "324Z", "325Z", "326Z"],
+        style: {
+            text: "#BDD8FF"
+        }
+    },
+
+    {   
+        artist: "ARTMS",
+        season: "Binary01",
+        collections: ["322Z"],
+        style: {
+            text: "#92D5FB"
+        }
+    },
+
+    {   
+        artist: "ARTMS",
+        season: "Cream01",
+        collections: ["301A"],
+        style: {
+            text: "#2863AF"
+        }
+    },
+
+    {   
+        artist: "ARTMS",
+        season: "Cream01",
+        collections: ["333Z"],
+        style: {
+            text: "#570D08"
+        }
+    },
+
+    {   
+        artist: "ARTMS",
+        season: "Cream01",
+        collections: ["334Z", "335Z"],
+        style: {
+            text: "#5B4938"
+        }
+    },
+
+    {   
+        artist: "ARTMS",
+        season: "Cream01",
+        collections: ["339Z", "340Z", "341Z"],
+        style: {
+            text: "#E192B4"
+        }
+    },
+
+    {   
+        artist: "ARTMS",
+        season: "Cream01",
+        collections: ["351A"],
+        style: {
+            text: "#91CDF1"
+        }
+    },
+
+    {   
+        artist: "ARTMS",
+        season: "Cream01",
+        collections: ["352Z"],
+        style: {
+            text: "#2D77FF"
+        }
+    },
+
+    {   
+        artist: "ARTMS",
+        season: "Cream01",
+        collections: ["354Z", "355Z"],
+        style: {
+            text: "#FBFAD7"
+        }
+    },
+
+    {   
+        artist: "ARTMS",
+        season: "Cream01",
+        collections: ["359Z"],
+        style: {
+            text: "#3286F9"
+        }
+    },
+
+    {   
+        artist: "ARTMS",
+        season: "Divine01",
+        collections: ["304A", "305A", "306A", "307A"],
+        style: {
+            text: "#EAE9E8"
+        }
+    },
+
+    {   
+        artist: "ARTMS",
+        season: "Divine01",
+        collections: ["312Z"],
+        style: {
+            text: "#16A987"
+        }
+    },
+
+    {   
+        artist: "ARTMS",
+        season: "Divine01",
+        collections: ["314Z", "315Z", "316Z", "317Z", "322Z", "323Z", "324Z"],
+        style: {
+            text: "#1D71A0"
+        }
+    },
+
+    {   
+        artist: "ARTMS",
+        season: "Divine01",
+        collections: ["318Z"],
+        style: {
+            text: "#FFE52B"
+        }
+    },
+
+    {   
+        artist: "ARTMS",
+        season: "Divine01",
+        collections: ["320Z"],
+        style: {
+            text: "#D9D9D6"
+        }
+    },
+
+    {   
+        artist: "ARTMS",
+        season: "Divine01",
+        collections: ["326Z"],
+        style: {
+            text: "#F7F9F3"
+        }
+    },
+
+    {   
+        artist: "ARTMS",
+        season: "Divine01",
+        collections: ["331Z"],
+        style: {
+            text: "#4C6F24"
+        }
+    },
+
+    {   
+        artist: "ARTMS",
+        season: "Divine01",
+        collections: ["336A"],
+        style: {
+            text: "#F3E6E6"
+        }
+    },
+
+    {   
+        artist: "ARTMS",
+        season: "Divine01",
+        collections: ["337Z"],
+        style: {
+            text: "#F9B2B5"
+        }
+    },
+
+    {   
+        artist: "ARTMS",
+        season: "Divine01",
+        collections: ["338Z"],
+        style: {
+            text: "#BBD0F8"
+        }
+    },
+
+    {   
+        artist: "ARTMS",
+        season: "Divine01",
+        collections: ["339Z"],
+        style: {
+            text: "#E8D1FD"
+        }
+    },
+
+    {   
+        artist: "ARTMS",
+        season: "Divine01",
+        collections: ["340Z"],
+        style: {
+            text: "#FAD5EC"
+        }
+    },
+
+    {   
+        artist: "ARTMS",
+        season: "Divine01",
+        collections: ["341Z", "342Z", "343Z"],
+        style: {
+            text: "#F6FBD8"
+        }
+    },
+
+    {   
+        artist: "ARTMS",
+        season: "Divine01",
+        collections: ["347Z"],
+        style: {
+            text: "#F7F9F3"
+        }
+    },
+
+    {   
+        artist: "ARTMS",
+        season: "Ever01",
+        collections: ["301A"],
+        style: {
+            text: "#131D4B"
+        }
+    },
+
+    {   
+        artist: "ARTMS",
+        season: "Ever01",
+        collections: ["316Z", "317Z", "318Z", "319Z"],
+        style: {
+            text: "#F0CA66"
+        }
+    },
+
+    {   
+        artist: "ARTMS",
+        season: "Ever01",
+        collections: ["323Z", "324Z", "325Z", "326Z"],
+        style: {
+            text: "#E192B4"
+        }
+    },
+
+    {   
+        artist: "ARTMS",
+        season: "Ever01",
+        collections: ["327Z", "328Z", "329Z"],
+        style: {
+            text: "#767675"
+        }
+    },
+
+    {   
+        artist: "ARTMS",
+        season: "Ever01",
+        collections: ["330Z", "331Z"],
+        style: {
+            text: "#FBFAD7"
+        }
+    },
+
+    {   
+        artist: "idntt",
+        season: "Summer25",
+        collections: ["217A", "227Z"],
+        style: {
+            text: "#F18900",
+            logo: "#F18900"
+        }
+    },
+
+    {   
+        artist: "idntt",
+        season: "Summer25",
+        collections: ["222Z", "223Z", "224Z", "225Z"],
+        style: {
+            text: "#FB79FD",
+            logo: "#FB79FD"
+        }
+    },
+
+    {   
+        artist: "idntt",
+        season: "Summer25",
+        collections: ["226Z"],
+        style: {
+            text: "#F7F9F3",
+            logo: "#F7F9F3"
+        }
+    },
+
+    {   
+        artist: "idntt",
+        season: "Autumn25",
+        collections: ["205Z", "206Z", "207Z", "208Z"],
+        style: {
+            text: "#A4E1FF",
+            logo: "#A4E1FF"
+        }
+    },
+
+    {   
+        artist: "idntt",
+        season: "Autumn25",
+        collections: ["209Z"],
+        style: {
+            text: "#EB611B",
+            logo: "#EB611B"
+        }
+    },
+
+    {   
+        artist: "idntt",
+        season: "Winter26",
+        collections: ["219A"],
+        style: {
+            text: "#004489",
+            logo: "#004489"
+        }
+    },
+
+    {   
+        artist: "idntt",
+        season: "Winter26",
+        collections: ["221Z"],
+        style: {
+            text: "#136D55",
+            logo: "#136D55"
+        }
+    },
+
+    {   
+        artist: "idntt",
+        season: "Winter26",
+        collections: ["222Z", "223Z", "224Z", "225Z"],
+        style: {
+            text: "#FFCDCD",
+            logo: "#FFCDCD"
+        }
+    },
+
+    {   
+        artist: "idntt",
+        season: "Winter26",
+        collections: ["226Z"],
+        style: {
+            text: "#3D2E93",
+            logo: "#3D2E93"
+        }
+    },
+
+    {   
+        artist: "idntt",
+        season: "Winter26",
+        collections: ["227Z"],
+        style: {
+            text: "#FAD400",
+            logo: "#FAD400"
+        }
+    },
+
+    {   
+        artist: "idntt",
+        season: "Winter26",
+        collections: ["230Z", "231Z"],
+        style: {
+            text: "#A4E1FF",
+            logo: "#A4E1FF"
+        }
+    },
+
+    {   
+        artist: "idntt",
+        season: "Spring26",
+        collections: ["204Z", "205Z", "206Z", "207Z"],
+        style: {
+            text: "#1C3A08",
+            logo: "#1C3A08"
+        }
+    },
+
+    {   
+        artist: "idntt",
+        season: "Spring26",
+        collections: ["208Z", "209Z"],
+        style: {
+            text: "#F0FFD0",
+            logo: "#F0FFD0"
+        }
+    },
+
+    {   
+        artist: "idntt",
+        season: "Spring26",
+        collections: ["210Z"],
+        style: {
+            text: "#966A28",
+            logo: "#966A28"
+        }
+    },
+
+    {   
+        artist: "idntt",
+        season: "Spring26",
+        collections: ["211Z"],
+        style: {
+            text: "#772151",
+            logo: "#772151"
+        }
+    },
+
+    {   
+        artist: "idntt",
+        season: "Spring26",
+        collections: ["213Z", "214Z"],
+        style: {
+            text: "#FFA617",
+            logo: "#FFA617"
+        }
+    },
+
+    {   
+        artist: "idntt",
+        season: "Spring26",
+        collections: ["215Z", "216Z", "217Z", "218Z"],
+        style: {
+            text: "#D6345E",
+            logo: "#D6345E"
+        }
+    },
+
+    {   
+        artist: "idntt",
+        season: "Summer26",
+        collections: ["212Z", "213Z"],
+        style: {
+            text: "#D6D6D6",
+            logo: "#D6D6D6"
         }
     },
 ];
