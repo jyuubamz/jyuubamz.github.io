@@ -174,3 +174,27 @@ tr.me td{background:color-mix(in srgb,var(--club) 13%,transparent)!important}
  .ibx .back{display:inline-flex}
  .ibp .bd{max-height:none}
 }
+/* ===== mobile fit fixes ===== */
+@media(max-width:900px){
+ html,body{overflow-x:hidden}
+ td{white-space:normal}
+ .tw td,.tw th{white-space:nowrap}
+ .grid,.g2{grid-template-columns:minmax(0,1fr)}
+ .grid>*,.g2>*,.panel,.pb{min-width:0}
+ .stat>*{min-width:0}
+ .stat{flex-wrap:wrap}
+ .kpi{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .seg{flex-wrap:wrap}
+ .ph{flex-wrap:wrap}
+ .profile-hd{flex-wrap:wrap}
+ .profile-hd h1{font-size:22px}
+ .mbox{max-height:92vh}
+ .opt{flex-wrap:wrap}
+}
+/* ===== subtabs: wrap on desktop, fade-scroll on mobile ===== */
+main{max-width:1640px}
+.subtabs{flex-wrap:wrap;row-gap:0}
+.subtabs button{padding:10px 12px}
+@media(max-width:900px){
+ .subtabs{flex-wrap:nowrap;-webkit-mask-image:linear-gradient(90deg,#000 85%,transparent);mask-image:linear-gradient(90deg,#000 85%,transparent);padding-right:28px}
+}

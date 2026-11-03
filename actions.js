@@ -159,7 +159,7 @@ function moveRoom(pid,r){P(pid).room=+r;done()}
 function setRule(k,v){S.rules[k]=v;done()}
 // ================= ACTORS =================
 function signActor(i){const a=S.actorPool[i];if(!pay(a.cost))return;delete a.cost;joinAgency(a);S.actorPool.splice(i,1);mail('Actor signed: '+a.name,`${esc(a.name)} joined your acting division.`);closeModal();done()}
-function castChance(p,r){const fame=fameOf(p);return clamp(0.3+(p.attrs.act-r.req)*0.08+Math.log10(fame+10)*0.03+sf('act')*0.15+(p.image-60)/200+(hasTrait('Networker')?0.05:0),0.05,0.95)}
+function castChance(p,r){const fame=fameOf(p);return clamp(0.3+(p.attrs.act-r.req)*0.08+Math.log10(fame+10)*0.03+sf('act')*0.15+sf('casting')*0.1+(p.image-60)/200+(hasTrait('Networker')?0.05:0),0.05,0.95)}
 function showCast(rid){
   const r=S.roles.find(x=>x.id===rid);
   const c=mine().filter(p=>(p.status==='actor'||p.status==='idol')&&avail(p)&&p.g===r.g&&!r.tried.includes(p.id));
@@ -191,7 +191,7 @@ function remix(sid){const s=SG(sid);if(!pay(50))return;s.remix=3;s.remixed=true;
 function ostRespond(id,yes){const o=S.ostOffers.find(x=>x.id===id);S.ostOffers=S.ostOffers.filter(x=>x!==o);if(yes){const p=P(o.pid),g=G(p.groupId);if(!g)return done();const s=releaseSong(g,`${songName()} (${o.drama} OST)`,clamp(p.attrs.voc*4+R(0,12),10,95),2,S.week,{type:'OST',credits:['Drama OST team']});S.money+=o.fee;p.image=clamp(p.image+3,0,100);mail(`🎵 ${p.given} sings "${o.drama}" OST`,`"${esc(s.title)}" is out. Fee ${fmtM(o.fee)}.`)}done()}
 // ================= MARKET =================
 function bidChance(p,amt){const ag=AG(p.agencyId);return clamp((amt/value(p)-0.85)*1.6+(S.rep-ag.rep)/150+0.1,0.02,0.95)}
-function agentChance(p,split){return clamp(0.5+(split-demand(p))/12+(S.rep-AG(p.agencyId).rep)/200,0.03,0.97)}
+function agentChance(p,split){return clamp(0.5+(split-demand(p))/12+(S.rep-AG(p.agencyId).rep)/200+sf('legal')*0.06,0.03,0.97)}
 function showBid(pid){
   const p=P(pid),v=value(p),d=demand(p);
   const upd=`bch.textContent=Math.round(bidChance(P(${pid}),+bamt.value)*100)+'%';ach.textContent=Math.round(agentChance(P(${pid}),+bsp.value)*100)+'%'`;
@@ -231,7 +231,7 @@ function startCollab(){const g=G(+cg.value),r=G(+cr.value),fee=Math.round(100+r.
   g.prep={weeks:2,title:`${songName()} (with ${r.name})`,concept:S.trend,budget:'Standard',demo:null,type:'Single',lines:'equal',collab:r.id,extraHype:6};mail(`🤝 ${g.name} × ${r.name}`,`Collab single confirmed for 2 weeks from now.`,'release','g'+g.id);closeModal();done()}
 function poachRespond(match){const pc=S.poach;if(!pc)return;const s=S.staff[pc.role];if(match&&s){s.wage=pc.wage;mail(`${s.name} stays`,`You matched the offer: ${fmtM(s.wage)}/week.`)}else if(s){S.staff[pc.role]=null;mail(`${s.name} leaves`,`Your ${STAFF[pc.role][0]} left for ${AG(pc.aid).name}.`)}S.poach=null;done()}
 // ================= TV =================
-function pitchChance(t,sh){const v=t.kind==='group'?gAttr(t.o,'var'):t.o.attrs.var,f=t.kind==='group'?t.o.fans:fameOf(t.o);return clamp(0.2+v/35+sf('var')*0.2+sf('pr')*0.1+(hasTrait('Networker')?0.08:0)+(f>=sh.min?0.15:-0.3)-sh.tier*0.06,0.03,0.95)}
+function pitchChance(t,sh){const v=t.kind==='group'?gAttr(t.o,'var'):t.o.attrs.var,f=t.kind==='group'?t.o.fans:fameOf(t.o);return clamp(0.2+v/35+sf('var')*0.2+sf('pr')*0.1+sf('media')*0.12+(hasTrait('Networker')?0.08:0)+(f>=sh.min?0.15:-0.3)-sh.tier*0.06,0.03,0.95)}
 function tvTargets(){const busy=new Set(S.tv.map(t=>t.kind+t.tid));return[...myGroups().filter(g=>g.songs.length&&!busy.has('group'+g.id)).map(o=>({kind:'group',o})),...mine().filter(p=>(p.status==='idol'||p.status==='actor')&&avail(p)&&!busy.has('person'+p.id)).map(o=>({kind:'person',o}))]}
 function showPitch(si){const sh=TVSHOWS[si];
   openModal(M(`Pitch to ${sh.name}`,`<p class="muted sm">An 8-week regular spot. ${fmtM(sh.fee)}/week. Producers prefer ${fmtN(sh.min)}+ fans and strong Variety. Each week there's a chance of a viral moment.</p>${tvTargets().map(t=>{const ch=pitchChance(t,sh);return `<div class="opt" onclick="doPitch(${si},'${t.kind}',${t.o.id})">${t.kind==='person'?avatar(t.o,34):'<span style="font-size:24px">👥</span>'}<div class="f1"><b>${esc(t.kind==='group'?t.o.name:t.o.given)}</b> <span class="muted xs">${t.kind==='group'?'Group':t.o.status}</span></div><span class="pill ${ch>0.6?'g':ch>0.3?'w':'r'}">${Math.round(ch*100)}%</span></div>`}).join('')||'<p class="muted">No one available.</p>'}`))}
@@ -261,11 +261,11 @@ function setSpecial(){const a=+document.getElementById('sp1').value,b=+document.
 function showHire(role,asst){const pool=S.staffPool[role];
   openModal(M(`${asst?'Assistant':'Hire'} ${STAFF[role][0]}`,`<p class="muted sm">${STAFF[role][1]}. ${asst?'An assistant adds 35% of their rating to the department.':'Hiring costs 4 weeks of wages up front.'}</p>
   ${pool.map((s,i)=>`<div class="opt"><div class="f1"><b>${esc(s.name)}</b> <span class="pill c">${s.trait}</span><div>${stars(s.rating)} <span class="muted xs">${s.rating}/20 · ${TRAITS[s.trait]}</span></div></div><span class="sm">${fmtM(s.wage)}/wk</span><button class="btn pri s" onclick="hire('${role}',${i},${!!asst})">Hire</button></div>`).join('')}<p class="muted xs">New candidates every 8 weeks.</p>`))}
-function hire(role,i,asst){const s=S.staffPool[role][i];if(!pay(s.wage*4))return;if(asst){S.staff[role].asst=s}else{const old=S.staff[role];S.staff[role]={...s,asst:old?old.asst:null}}S.staffPool[role].splice(i,1);mail('Staff hired',`${esc(s.name)} joins as ${asst?'assistant ':''}${STAFF[role][0]}.`);closeModal();done()}
+function hire(role,i,asst){const s=S.staffPool[role][i];if(!pay(s.wage*4))return;if(asst){S.staff[role].asst={...s,wage:Math.max(1,Math.round(s.wage*0.6))}}else{const old=S.staff[role];S.staff[role]={...s,asst:old?old.asst:null}}S.staffPool[role].splice(i,1);mail('Staff hired',`${esc(s.name)} joins as ${asst?'assistant ':''}${STAFF[role][0]}.`);closeModal();done()}
 function fire(role,asst){const s=asst?S.staff[role].asst:S.staff[role];S.money-=s.wage*2;if(asst)S.staff[role].asst=null;else{const a=S.staff[role].asst;S.staff[role]=a?{...a,asst:null}:null;if(a)mail('Assistant promoted',`${esc(a.name)} steps up as ${STAFF[role][0]}.`)}done()}
 function hireIntern(){if(S.interns.length>=4)return toast('Max 4 interns');if(!pay(20))return;const[n]=genName(pick(['F','M']),'KR',-1);S.interns.push({id:nid(),name:n,rating:R(3,7),since:S.week});done()}
 function promoteIntern(id){const i=S.interns.find(x=>x.id===id),role=document.getElementById('ir'+id).value;const r=Math.round(i.rating);const s={name:i.name,rating:r,wage:Math.round(2+r*r*0.05),trait:pick(Object.keys(TRAITS)),end:S.week+104,asst:null};
-  if(!S.staff[role])S.staff[role]=s;else if(!S.staff[role].asst)S.staff[role].asst=s;else return toast('That department is full');S.interns=S.interns.filter(x=>x!==i);mail('Intern promoted',`${esc(i.name)} joins the ${STAFF[role][0]} department.`);done()}
+  if(!S.staff[role])S.staff[role]=s;else if(!S.staff[role].asst)S.staff[role].asst=s;else return toast('That role already has a head and an assistant');S.interns=S.interns.filter(x=>x!==i);mail('Intern promoted',`${esc(i.name)} joins the ${STAFF[role][0]} department.`);done()}
 function setDelegate(k,v){S.delegate[k]=v;done()}
 // ================= BOARD / FINANCE / GLOBAL =================
 const facMax=()=>S.board.hq?7:5;
@@ -302,7 +302,7 @@ function showReport(rep){
   rep.tour.forEach(t=>h+=`<div class="news">🎤 ${esc(t.g)} in <b>${t.city}</b> (${t.venue}): ${fmtN(t.sold)}/${fmtN(t.cap)} sold</div>`);
   if(rep.shows.some(x=>x.myPos)){h+=`<h3 style="margin:10px 0 6px">This week's music shows</h3><div class="tw"><table><tr><th>Day</th><th>Show</th><th>Winner</th><th>You</th></tr>${rep.shows.map(sh=>{const w=SG(sh.top[0].id),wg=G(w.groupId),me=wg.agencyId===0;return `<tr class="${me?'me':''}"><td>${sh.day}</td><td>${sh.show}</td><td>${me?'🏆 ':''}${esc(wg.name)}</td><td>${sh.myPos?'#'+sh.myPos:'–'}</td></tr>`}).join('')}</table></div>`}
   rep.awards.forEach(a=>{h+=`<h3 style="margin:10px 0 4px">🎤 ${a.cer}</h3>`+a.res.map(r=>`<div class="sm" style="${r.aid===0?'color:var(--club);font-weight:800':''}">${r.cat}: ${esc(r.name)} ${esc(r.detail)}</div>`).join('')});
-  openModal(M(dayStr(S.week,0,true)+' · Weekly report',h,'<button class="btn" onclick="closeModal()">Close</button><button class="btn club" onclick="cont()">Continue ›</button>'));
+  openModal(M(dayStr(S.week,0,true)+' · Weekly report',h,'<button class="btn club" onclick="toInbox()">Continue ›</button>'));
 }
 function showGameOver(){openModal(M('Sacked',`<p>The board has lost all confidence. You have been removed as CEO of ${esc(S.agency)}.</p><p class="muted">You lasted until ${dateStr(S.week)}, with ${myGroups().length} group(s), ${sum(S.groups.filter(g=>g.agencyId===0).map(g=>g.trophies))} music show wins and ${S.awardHist.filter(a=>a.aid===0).length} awards.</p>`,'<button class="btn club" onclick="resetGame()">New game</button>'),true)}
 

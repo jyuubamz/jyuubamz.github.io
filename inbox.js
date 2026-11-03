@@ -12,9 +12,9 @@ function msgMeta(m){
   if(!name){S.sysNames=S.sysNames||{};if(!S.sysNames[title])S.sysNames[title]=genName(pick(['F','M']),'KR',-1)[0];name=S.sysNames[title]}
   m.from=name;m.role=title;m.time=`${RI(8,10)}:${String(RI(0,59)).padStart(2,'0')}`;m.src=pick(SOURCES);
 }
-function inboxList(){const f=S.ibf||'all',q=(S.ibq||'').toLowerCase();return S.inbox.filter(m=>(f==='all'||(f==='unread'&&!m.read)||m.type===f)&&(!q||(m.title+' '+m.body).toLowerCase().includes(q)))}
+function inboxList(){const f=S.ibf||'all',q=(S.ibq||'').toLowerCase();return visibleInbox().filter(m=>(f==='all'||(f==='unread'&&!m.read)||m.type===f)&&(!q||(m.title+' '+m.body).toLowerCase().includes(q)))}
 function openMsg(id){S.ibSel=id;const m=S.inbox.find(x=>x.id===id);if(m)m.read=true;save();render()}
-function markAllRead(){S.inbox.forEach(m=>m.read=true);done()}
+function markAllRead(){visibleInbox().forEach(m=>m.read=true);done()}
 function delMsg(id){const l=inboxList(),i=l.findIndex(m=>m.id===id);S.inbox=S.inbox.filter(m=>m.id!==id);const nx=l[i+1]||l[i-1];S.ibSel=nx?nx.id:null;done()}
 function toggleWeek(w){S.ibCol=S.ibCol||{};S.ibCol[w]=!S.ibCol[w];render()}
 function msgAttachment(m){
@@ -40,17 +40,17 @@ function vInbox(){
   const wide=window.innerWidth>900;
   if(!S.ibSel&&wide&&list.length){S.ibSel=list[0].id;list[0].read=true;setTimeout(save,0)}
   const sel=S.inbox.find(m=>m.id===S.ibSel);
-  const weeks=[];list.forEach(m=>{const k=m.w*7+(m.d||0);let w=weeks.find(x=>x.k===k);if(!w){w={k,w:m.w,d:m.d||0,items:[]};weeks.push(w)}w.items.push(m)});const tv=t=>{const[h,mm]=t.split(':');return +h*60+ +mm};weeks.forEach(w=>w.items.sort((a,b)=>tv(b.time)-tv(a.time)));
+  const weeks=[];list.forEach(m=>{const k=m.w*7+(m.d||0);let w=weeks.find(x=>x.k===k);if(!w){w={k,w:m.w,d:m.d||0,items:[]};weeks.push(w)}w.items.push(m)});const tv=t=>{const[h,mm]=t.split(':');return +h*60+ +mm};weeks.sort((a,b)=>b.k-a.k);weeks.forEach(w=>w.items.sort((a,b)=>tv(b.time)-tv(a.time)));
   const col=S.ibCol||{};
-  const filters=[['all','All Items'],['unread','Unread'],['board','Board'],['release','Releases'],['win','Results & awards'],['offer','Offers'],['scandal','Crisis'],['news','News']];
+  const filters=[['all','All Items'],['unread','Unread'],['board','Board'],['release','Releases'],['win','Results & awards'],['offer','Offers'],['scandal','Crisis'],['decision','Decisions'],['news','News']];
   const left=`<div class="ibl"><div class="tb"><select onchange="S.ibf=this.value;S.ibSel=null;render()">${filters.map(([k,l])=>`<option value="${k}" ${f===k?'selected':''}>${l}</option>`).join('')}</select><input placeholder="🔍 Search" value="${esc(S.ibq||'')}" onchange="S.ibq=this.value;S.ibSel=null;render()"><button class="btn s" title="Mark all read" onclick="markAllRead()">✓</button></div>
-  <div class="ls">${weeks.map(w=>`<div class="wk" onclick="toggleWeek(${w.k})">${dayStr(w.w,w.d,true)} <span>(${w.items.length} item${w.items.length>1?'s':''}) ${col[w.k]?'▸':'▾'}</span></div>${col[w.k]?'':w.items.map(m=>`<div class="mi ${m.read?'':'unread'} ${sel&&sel.id===m.id?'on':''}" onclick="openMsg(${m.id})"><div class="fr"><b>${esc(m.from)}</b><span>${m.time}</span></div><div class="sj">${m.title}</div></div>`).join('')}`).join('')||'<p class="muted" style="padding:14px">No messages.</p>'}</div></div>`;
+  <div class="ls">${weeks.map(w=>`<div class="wk" onclick="toggleWeek(${w.k})">${dayStr(w.w,w.d,true)} <span>(${w.items.length} item${w.items.length>1?'s':''}) ${col[w.k]?'▸':'▾'}</span></div>${col[w.k]?'':w.items.map(m=>`<div class="mi ${m.read?'':'unread'} ${sel&&sel.id===m.id?'on':''}" onclick="openMsg(${m.id})"><div class="fr"><b>${esc(m.from)}</b><span>${m.time}</span></div><div class="sj">${m.choices&&!m.resolved?'<span class="pill w" style="margin-right:4px">⚡ Decision</span>':''}${m.title}</div></div>`).join('')}`).join('')||'<p class="muted" style="padding:14px">No messages.</p>'}</div></div>`;
   let right='<div class="ibp"><div class="bd muted">Select a message.</div></div>';
   if(sel){const cat=MSG_CAT[sel.type]||MSG_CAT.news,face=faceOf(sel.from),isArticle=['news','win','scandal','release'].includes(sel.type);
     const intro={news:"I'm forwarding the following for your attention:",win:"Great news from the press office:",scandal:"This story broke today. We need a decision from you quickly:",release:"Here's the latest from the studio:"}[sel.type];
     const body=isArticle?`<p>${intro}</p><div class="article"><div class="src"><span>${sel.src}</span></div><div class="ac"><h3>${sel.title.replace(/^[^\w"'#]+\s*/,'')}</h3><div>${sel.body}</div></div></div>`:`<p>Dear ${esc(S.agency)} CEO,</p><p>${sel.body}</p><p class="muted">— ${esc(sel.from)}, ${sel.role}</p>`;
     right=`<div class="ibp"><div class="hd"><button class="ib back" onclick="S.ibSel=null;render()">‹</button>${avatar(face,44)}<div class="f1" style="min-width:0"><div class="who">${esc(sel.from)} (${sel.role})</div><div class="sjt">${sel.title}</div></div><div style="text-align:right" class="xs"><span class="pill ${cat[2]}">${cat[0]} ${cat[1]}</span><div class="muted" style="margin-top:4px">${dayStr(sel.w,sel.d||0)} · ${sel.time}</div></div></div>
-    <div class="bd">${body}${msgAttachment(sel)}</div>
+    <div class="bd">${body}${decisionBlock(sel)}${msgAttachment(sel)}</div>
     <div class="ft">${sel.link?`<button class="btn club" onclick="openLink('${sel.link}')">${linkLabel(sel.link)} ›</button>`:''}<span class="f1"></span><button class="btn s" onclick="const m=S.inbox.find(x=>x.id===${sel.id});m.read=false;S.ibSel=null;done()">Mark unread</button><button class="btn s dan" onclick="delMsg(${sel.id})">Delete</button></div></div>`}
   return `<div class="ibx ${sel?'reading':''}">${left}${right}</div>`;
 }

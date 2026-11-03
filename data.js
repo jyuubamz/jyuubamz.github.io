@@ -135,7 +135,7 @@ const rosterG=()=>S.roster==='X'?pick(['F','M']):S.roster;
 function genScout(region='KR'){
   const A=AUDITION[region],lvl=S.fac.scout,err=Math.max(0.4,3.4-lvl*0.45-sf('scout')*1.6);
   S.scout=[];S.scoutRegion=region;
-  for(let i=0;i<5;i++){
+  for(let i=0;i<5+(sf('casting')>0.5?1:0)+(sf('scout')>0.8?1:0);i++){
     const q=clamp(0.1+S.rep/100*0.4+lvl*0.04+sf('scout')*0.15+R(0,0.3)+(region!=='KR'?0.05:0),0,1);
     const p=genPerson(rosterG(),q,{nat:region==='KR'?(Math.random()<0.9?'KR':pick(['JP','CN'])):region,bias:A.bias});
     p.shown={};AK.forEach(k=>{const c=p.attrs[k]+R(-err,err);p.shown[k]=[Math.round(clamp(c-err,1,20)),Math.round(clamp(c+err,1,20))]});
@@ -145,7 +145,7 @@ function genScout(region='KR'){
   }
 }
 function genActorPool(){S.actorPool=[];for(let i=0;i<5;i++){const p=genPerson(pick(['F','M']),R(0.25,0.8),{actor:true,status:'actor',ageMin:19,ageMax:34});p.cost=Math.round(30+aov(p)*aov(p)*0.9+p.fame/2500);S.actorPool.push(p)}}
-function genStaff(){const r=Math.round(clamp(R(5,13)+S.rep/12+R(0,4),3,20)),tr=pick(Object.keys(TRAITS));const[n]=genName(pick(['F','M']),'KR',-1);return{name:n,rating:r,wage:Math.round((2+r*r*0.05)*(tr==='Workaholic'?1.2:1)),trait:tr,end:S.week+RI(78,156),asst:null}}
+function genStaff(){const r=Math.round(clamp(R(5,13)+S.rep/12+R(0,4),3,20)),tr=pick(Object.keys(TRAITS));const[n]=genName(pick(['F','M']),'KR',-1);return{name:n,rating:r,wage:Math.round((1+r*r*0.035)*(tr==='Workaholic'?1.2:1)),trait:tr,end:S.week+RI(78,156),asst:null}}
 function genStaffPool(){S.staffPool={};Object.keys(STAFF).forEach(k=>S.staffPool[k]=[genStaff(),genStaff(),genStaff()])}
 function genProducer(){const[n]=genName(pick(['F','M']),'KR',-1);const sk=Math.round(clamp(R(6,15)+S.rep/15,3,20));return{id:nid(),name:n,styles:[pick(CK),pick(CK)],skill:sk,hit:RI(3,18),wage:Math.round(2+sk*sk*0.04),chem:{},prog:R(0,4)}}
 function genRoles(){
@@ -219,12 +219,12 @@ const dormOcc=d=>S.people.filter(p=>p.agencyId===0&&p.dormId===d.id).length;
 function freeName(){const used=S.groups.map(g=>g.name);const f=GROUPNAMES.filter(n=>!used.includes(n));return f.length?pick(f):pick(GROUPNAMES)+' '+RI(2,9)}
 function newDemo(pr,bonus=0,o={}){
   const sk=pr?pr.skill:10,hit=pr&&Math.random()<pr.hit/100;
-  const q=Math.round(clamp(25+sk*2.3+S.fac.studio*4+sf('prod')*10+(hasTrait('Innovator')?3:0)+R(-12,12)+(hit?12:0)+bonus,10,98));
+  const q=Math.round(clamp(25+sk*2.3+S.fac.studio*4+sf('prod')*10+sf('lyric')*5+(hasTrait('Innovator')?3:0)+R(-12,12)+(hit?12:0)+bonus,10,98));
   return{id:nid(),title:songName(),concept:o.concept||(pr?pick(pr.styles):pick(CK)),quality:q,week:S.week,prod:pr?pr.id:null,credits:[pr?pr.name:(o.credit||'Outside writers')],idol:o.idol||null,hit,foreign:!!o.foreign};
 }
 
 // ================= HELPERS =================
-function mail(title,body,type='news',link){S.inbox.unshift({id:nid(),w:S.week,d:S.day||0,title,body,type,read:false,link});S.inbox=S.inbox.slice(0,250)}
+function mail(title,body,type='news',link,extra){const m={id:nid(),w:S.week,d:S.day||0,title,body,type,read:false,link};if(S._weekly&&!['release','board'].includes(type))m.d=RI(0,6);if(extra)Object.assign(m,extra);S.inbox.unshift(m);if(typeof socialFromMail==='function')socialFromMail(m);S.inbox=S.inbox.slice(0,250)}
 const myGroups=()=>S.groups.filter(g=>g.agencyId===0&&!g.disbanded);
 const rivalGroups=()=>S.groups.filter(g=>g.agencyId!==0&&!g.disbanded);
 const mine=()=>S.people.filter(p=>p.agencyId===0);
@@ -282,7 +282,7 @@ function train(p,mult,focus){
   const proF=p.pers?0.75+p.pers.pro/40:1;
   const base=0.12*ageF*(1+(p.agencyId===0?S.fac.training*0.12:0.3))*roomF*(0.6+p.morale/170)*mult*proF;
   AK.forEach(k=>{
-    let r=base*(1+(p.agencyId===0?sf(k)*0.8:0.4));
+    let r=base*(1+(p.agencyId===0?sf(k)*0.8+(k==='vis'?(sf('hair')+sf('makeup'))*0.3:0)+(p.status==='trainee'?sf('life')*0.1:0):0.4));
     if(focus!=='all')r*=(k===focus?2.6:0.45);
     if(k==='vis')r*=0.5;
     if(k==='act'&&p.status!=='actor'&&focus!=='act')r*=0.5;

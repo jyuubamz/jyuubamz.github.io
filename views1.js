@@ -10,11 +10,11 @@ function subtabs(v,list){const c=S.sub[v]||list[0][0];return[c,`<div class="subt
 const confCol=c=>c<25?'var(--bad)':c<50?'var(--warn)':'var(--good)';
 const pLink=p=>`<a href="javascript:void 0" onclick="${p.agencyId===0?`nav('person',${p.id})`:`showPerson(${p.id})`}">${esc(p.given)}</a>`;
 const gLink=g=>g?`<a href="javascript:void 0" onclick="${g.agencyId===0?`nav('group',${g.id})`:`showRival(${g.id})`}">${esc(g.name)}</a>`:'—';
-function badge(k){if(k==='inbox')return S.inbox.filter(m=>!m.read).length;if(k==='market')return S.offers.length;if(k==='scandals')return S.scandals.filter(x=>x.status==='open').length;if(k==='staff')return S.poach?1:0;if(k==='actors')return S.cfOffers.length;if(k==='studio')return S.ostOffers.length;return 0}
+function badge(k){if(k==='inbox')return visibleInbox().filter(m=>!m.read).length;if(k==='social')return 0;if(k==='market')return S.offers.length;if(k==='scandals')return S.scandals.filter(x=>x.status==='open').length;if(k==='staff')return S.poach?1:0;if(k==='actors')return S.cfOffers.length;if(k==='studio')return S.ostOffers.length;return 0}
 function render(){
   if(!S)return renderSetup();
   document.documentElement.style.setProperty('--club',S.color||'#e8327c');
-  const V={home:vHome,inbox:vInbox,schedule:vSchedule,groups:vGroups,group:vGroup,person:vPerson,trainees:vTrainees,actors:vActors,dorms:vDorms,studio:vStudio,tv:vTV,market:vMarket,global:vGlobal,fans:vFans,scandals:vScandals,charts:vCharts,awards:vAwards,board:vBoard,staff:vStaff,finances:vFinances,editor:vEditor}[S.view]||vHome;
+  const V={home:vHome,inbox:vInbox,schedule:vSchedule,groups:vGroups,group:vGroup,person:vPerson,trainees:vTrainees,actors:vActors,dorms:vDorms,studio:vStudio,tv:vTV,market:vMarket,global:vGlobal,fans:vFans,scandals:vScandals,charts:vCharts,awards:vAwards,board:vBoard,staff:vStaff,finances:vFinances,editor:vEditor,social:vSocial}[S.view]||vHome;
   const t=TABS_ALL.find(x=>x[0]===S.view);
   let title=t?t[1]:'',crumb=t?t[3]:'';
   if(S.view==='group'){const g=G(S.param);title=g?g.name:'Group';crumb='ARTISTS · GROUP'}
@@ -54,7 +54,7 @@ function vHome(){
   </div><div>
   ${alerts.length?panel('Needs attention',alerts.map(a=>`<div class="news click" style="cursor:pointer" onclick="openLink('${a[2]}')"><span class="pill ${a[0]}">!</span> ${a[1]}</div>`).join('')):''}
   ${panel('Coming up',(ss?`<div class="news">${SEASONL[ss]}</div>`:'')+(next.map(n=>`<div class="news sm">${n}</div>`).join('')||'<p class="muted sm">Nothing scheduled.</p>'),`<button class="btn s" onclick="nav('schedule')">Schedule</button>`)}
-  ${panel('Latest news',S.inbox.slice(0,6).map(m=>`<div class="news" style="cursor:pointer" onclick="S.ibSel=${m.id};nav('inbox')"><b class="sm">${m.title}</b><div class="xs muted">${dateStr(m.w)}</div></div>`).join(''))}
+  ${panel('Latest news',visibleInbox().slice(0,6).map(m=>`<div class="news" style="cursor:pointer" onclick="S.ibSel=${m.id};nav('inbox')"><b class="sm">${m.title}</b><div class="xs muted">${dateStr(m.w)}</div></div>`).join(''))}
   ${panel('Milestones',GOALS.map(([k,l])=>`<div class="stat"><span class="sm ${S.goals[k+'_done']?'muted':''}">${l}</span><span>${S.goals[k+'_done']?'✅':'⬜'}</span></div>`).join(''))}
   </div></div>`;
 }
