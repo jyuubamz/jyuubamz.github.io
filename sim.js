@@ -76,6 +76,7 @@ function advance(){
   });
   freeIdols().forEach(p=>{if(avail(p))train(p,0.5);p.cond=clamp(p.cond+15,0,100)});
   // ---- dorms & rules
+  if(typeof fixAllDorms==='function')fixAllDorms();
   S.dorms.forEach(d=>{const occ=mine().filter(p=>p.dormId===d.id),over=Math.max(0,occ.length-d.beds),dm=(d.q-2.5)*0.5-Math.min(4,over*0.8);
     occ.forEach(p=>p.morale=clamp(p.morale+dm,0,100));
     const rooms={};occ.forEach(p=>(rooms[p.room]=rooms[p.room]||[]).push(p));

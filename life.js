@@ -7,13 +7,36 @@ function visibleInbox(){const w=S.week,d=S.day||0;return S.inbox.filter(m=>m.w<w
 const visUnreadIds=()=>visibleInbox().filter(m=>!m.read).map(m=>m.id);
 
 // ---------- DORM ROOMS (2–4 beds each) ----------
-function dormRooms(d){if(!d.rooms||sum(d.rooms)!==d.beds){d.rooms=[];let b=d.beds;while(b>0){const c=Math.min(b,RI(2,4));d.rooms.push(c);b-=c}}return d.rooms}
+function dormRooms(d){
+  if(!d.rooms||!d.rooms.length){d.rooms=[];let b=d.beds||2;while(b>0){let c=Math.min(b,RI(2,4));if(b-c===1)c=b>=5?c-1:b;d.rooms.push(Math.max(2,Math.min(4,c)));b-=c}}
+  d.rooms=d.rooms.map(c=>clamp(Math.round(c)||2,2,4));
+  let s=sum(d.rooms);while(s<(d.beds||0)){const c=clamp(d.beds-s,2,4);d.rooms.push(c);s+=c}
+  while(d.beds&&d.rooms.length>1&&s-d.rooms[d.rooms.length-1]>=d.beds){s-=d.rooms.pop()}
+  d.beds=sum(d.rooms);return d.rooms;
+}
+function note(t){toast(t);const e=[...document.querySelectorAll('.toast')].pop();if(e)e.style.background='var(--good)'}
 const roomCap=(d,r)=>dormRooms(d)[r]||2;
-function assignDorm(p){const d=S.dorms.find(d=>dormOcc(d)<d.beds)||S.dorms[0];p.dormId=d?d.id:null;if(d)assignDorm2(p)}
-function assignDorm2(p){const d=D(p.dormId);if(!d)return;const rs=dormRooms(d);for(let r=0;r<rs.length;r++){if(mine().filter(x=>x.dormId===d.id&&x.room===r&&x!==p).length<rs[r]){p.room=r;return}}p.room=0}
-function dormBeds(id){const d=D(id),c=RI(2,4);if(d.beds+c>4+d.q*3)return toast('Upgrade quality to fit another room');if(!pay(30*c))return;dormRooms(d).push(c);d.beds+=c;toast(`New ${c}-bed room added`);done()}
+const dormMaxBeds=d=>4+d.q*3;
+function roomCount(d,r,except){return mine().filter(x=>x.dormId===d.id&&x.room===r&&x!==except).length}
+function fixDorm(d){
+  const rs=dormRooms(d),occ=mine().filter(p=>p.dormId===d.id&&!p.ownHome&&p.status!=='actor');
+  const cnt=rs.map(()=>0);
+  const bad=[];occ.forEach(p=>{if(p.room==null||p.room<0||p.room>=rs.length||isNaN(p.room))bad.push(p);else cnt[p.room]++});
+  // overfull rooms give up their extra residents if there's space elsewhere
+  rs.forEach((cap,r)=>{if(cnt[r]>cap&&cnt.some((c,i)=>c<rs[i])){const extra=occ.filter(p=>p.room===r).slice(cap);extra.forEach(p=>{cnt[r]--;bad.push(p)})}});
+  bad.forEach(p=>{let r=cnt.findIndex((c,i)=>c<rs[i]);if(r<0){r=0;cnt.forEach((c,i)=>{if((c+1)/rs[i]<(cnt[r]+1)/rs[r])r=i})}p.room=r;cnt[r]++});
+}
+function fixAllDorms(){S.dorms.forEach(fixDorm);mine().filter(p=>p.status!=='actor'&&!p.ownHome&&(!p.dormId||!D(p.dormId))).forEach(p=>assignDorm(p))}
+function assignDorm(p){if(!S.dorms.length){p.dormId=null;return}const d=S.dorms.find(d=>dormOcc(d)<d.beds)||S.dorms.slice().sort((a,b)=>(dormOcc(a)-a.beds)-(dormOcc(b)-b.beds))[0];p.dormId=d.id;p.room=null;assignDorm2(p)}
+function assignDorm2(p){const d=D(p.dormId);if(!d)return;const rs=dormRooms(d);let r=rs.findIndex((c,i)=>roomCount(d,i,p)<c);if(r<0){r=0;rs.forEach((c,i)=>{if((roomCount(d,i,p)+1)/c<(roomCount(d,r,p)+1)/rs[r])r=i})}p.room=r}
+function dormBeds(id){const d=D(id),room=dormMaxBeds(d)-d.beds;if(room<2)return toast(d.q<5?'Upgrade quality to fit another room':'This dorm is at maximum size');const c=Math.min(RI(2,4),room);if(!pay(30*c))return;dormRooms(d).push(c);d.beds+=c;fixDorm(d);note(`New ${c}-bed room added`);done()}
+function arrangeDorm(id){const d=D(id),rs=dormRooms(d);const occ=mine().filter(p=>p.dormId===id&&!p.ownHome&&p.status!=='actor').sort((a,b)=>((a.groupId||0)-(b.groupId||0))||(a.status<b.status?-1:1));
+  const cnt=rs.map(()=>0);occ.forEach(p=>{let r=cnt.findIndex((c,i)=>c<rs[i]);if(r<0){r=0;cnt.forEach((c,i)=>{if((c+1)/rs[i]<(cnt[r]+1)/rs[r])r=i})}p.room=r;cnt[r]++});note('Rooms re-arranged: groupmates together');done()}
+function moveRoom(pid,r){const p=P(pid),d=D(p.dormId);if(d&&roomCount(d,+r,p)>=roomCap(d,+r))toast('That room is full: it will be cramped');p.room=+r;done()}
+function moveDorm(pid,did){const p=P(pid),d=D(+did);if(d&&dormOcc(d)>=d.beds)toast(`${d.name} is full: it will be overcrowded`);p.dormId=+did;assignDorm2(p);done()}
 function dormNew(){if(S.dorms.length>=dormMax())return toast('Max dorms reached');if(!pay(500))return;const rooms=[RI(2,4),RI(2,4)];S.dorms.push({id:nid(),name:['Main','Hannam','Seongsu','Mapo','Gangnam','Itaewon','Yeouido','Jamsil'][S.dorms.length]+' Dorm',q:1,beds:sum(rooms),rooms});done()}
 function vDorms(){
+  fixAllDorms();
   const people=mine().filter(p=>p.status!=='actor'&&!p.ownHome),wants=mine().filter(p=>p.wantsHome);
   const seg=(k,v,l)=>`<button class="${S.rules[k]===v?'on':''}" onclick="setRule('${k}',${typeof v==='string'?`'${v}'`:v})">${l}</button>`;
   const rules=panel('House rules (agency-wide)',`<div class="stat"><span><b>Curfew</b><div class="xs muted">Scandal risk −20%, morale −</div></span><div class="seg">${seg('curfew',false,'Off')}${seg('curfew',true,'On')}</div></div>
@@ -23,7 +46,7 @@ function vDorms(){
   return `<div class="row wrap" style="margin-bottom:10px"><p class="muted sm f1" style="margin:0">Rooms hold 2–4 people, as in real idol dorms. A room is only cramped when it's over its bed count. Roommates build chemistry.</p><button class="btn club" onclick="dormNew()">Open new dorm (${fmtM(500)})</button></div>
   <div class="g2"><div class="grid">${S.dorms.map(d=>{const rs=dormRooms(d),occ=people.filter(p=>p.dormId===d.id),over=occ.length>d.beds,dm=(d.q-2.5)*0.5-Math.min(4,Math.max(0,occ.length-d.beds)*0.8);
   return panel(`${esc(d.name)} ${stars(d.q*4)}`,`<div class="kpi"><div><small>Beds</small><b class="${over?'bad':''}">${occ.length}/${d.beds}</b></div><div><small>Rooms</small><b>${rs.length}</b></div><div><small>Morale/wk</small><b class="${dm>=0?'good':'bad'}">${dm>=0?'+':''}${dm.toFixed(1)}</b></div></div>
-  <div class="row wrap" style="margin:8px 0"><button class="btn pri s" onclick="dormUp(${d.id})" ${d.q>=5?'disabled':''}>Upgrade ${d.q<5?fmtM(150*d.q):''}</button><button class="btn s" onclick="dormBeds(${d.id})">+ Room (2–4 beds)</button><span class="muted xs">max ${4+d.q*3} beds</span></div>
+  <div class="row wrap" style="margin:8px 0"><button class="btn pri s" onclick="dormUp(${d.id})" ${d.q>=5?'disabled':''}>Upgrade ${d.q<5?fmtM(150*d.q):''}</button><button class="btn s" onclick="dormBeds(${d.id})" ${dormMaxBeds(d)-d.beds<2?'disabled':''}>+ Room (2–4 beds)</button><button class="btn s" onclick="arrangeDorm(${d.id})">Auto-arrange</button><span class="muted xs">${d.beds}/${dormMaxBeds(d)} max beds</span>${over?`<div class="bad xs" style="width:100%;margin-top:4px">⚠ ${occ.length-d.beds} more resident(s) than beds. Add a room, move people to another dorm, or open a new dorm.</div>`:''}</div>
   ${rs.map((cap,r)=>{const rp=occ.filter(p=>p.room===r);return `<div class="news"><div class="xs muted">ROOM ${r+1} · ${rp.length}/${cap} beds ${rp.length>cap?'<span class="bad">· cramped</span>':''}</div>${rp.map(p=>`<div class="row" style="padding:2px 0">${avatar(p,24)}<span class="f1 sm">${pLink(p)}</span><select class="xs" onchange="moveRoom(${p.id},this.value)">${rs.map((c,i)=>`<option value="${i}" ${i===r?'selected':''}>Room ${i+1} (${c})</option>`).join('')}</select><select class="xs" onchange="moveDorm(${p.id},this.value)">${S.dorms.map(x=>`<option value="${x.id}" ${x.id===d.id?'selected':''}>${esc(x.name)}</option>`).join('')}</select></div>`).join('')||'<span class="muted xs">Empty</span>'}</div>`}).join('')}`)}).join('')}</div><div>${req}${rules}</div></div>`;
 }
 
