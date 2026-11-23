@@ -59,8 +59,8 @@ button{font:inherit;font-weight:600;min-height:48px;padding:0 18px;border-radius
 .bottom{display:grid;grid-template-columns:minmax(0,1fr) 38%;border-top:1.2px solid var(--line);border-bottom:1.2px solid var(--line);margin-top:auto;min-height:130px}
 .sig{border-right:1.2px solid var(--line);padding:8px 8px 6px 0;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden}
 .sig .remark{font-size:12px;line-height:1.35}
-.box{background:#fff;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:6px}
-.box .big{font-size:56px;font-weight:700;line-height:1}
+.box{container-type:inline-size;background:#fff;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:6px}
+.box .big{font-size:min(56px,calc(88cqw / (var(--n,2) * .62)));white-space:nowrap;font-weight:700;line-height:1}
 .box small{font-size:11px;line-height:1.25;text-transform:uppercase;margin-top:4px}
 .foot{font-size:11px;margin-top:14px}
 .empty{color:var(--muted);text-align:center;padding:40px 0;border:1px dashed #333;border-radius:20px;width:min(100%,460px)}
@@ -115,8 +115,8 @@ td .gap{display:block;color:var(--muted);font-size:12px}
    Paste that link into CSV_URL.
    Or: share the sheet as "Anyone with the link can view" and paste the ID (the part between /d/ and /edit) into SHEET_ID. */
 const SEASONS = [
-  { id:"binary02", name:"Binary", num:"02", color:"#75FB4C", CSV_URL:"", SHEET_ID:"1BUUwNM6oeN1TmTY5p16knKeDRTgMWwKTC05H5H-N9Ms", SHEET_NAME:"BINARY02 FULL COMPLETE DATA" },
-  { id:"cream02",  name:"Cream",  num:"02", color:"#ff7477", CSV_URL:"", SHEET_ID:"1Cu2aQNeb2A829U8DQRN37wQ4d31x6QNVkSxIPvFGNlo", SHEET_NAME:"CREAM02 FULL COMPLETE DATA" }
+  { id:"binary02", name:"Binary", num:"02", color:"#75FB4C", CSV_URL:"", SHEET_ID:"", SHEET_NAME:"Sheet1" },
+  { id:"cream02",  name:"Cream",  num:"02", color:"#ff7477", CSV_URL:"", SHEET_ID:"", SHEET_NAME:"Sheet1" }
 ];
 
 
@@ -238,7 +238,7 @@ function render(u){
     ${members.length?`<div class="list"><div class="li h"><span>Member board</span><span>Objekt</span><span>Grid</span></div>${members.map(m=>`<div class="li"><span>${esc(m.s.name)}</span>${cellLi(m.o)}${cellLi(m.gr)}</div>`).join('')}</div>`:''}
     <div class="bottom">
       <div class="sig"><div class="remark">Ranked on ${all.length} of ${boards.length} boards · top 10 on ${top10}</div></div>
-      <div class="box">${bestB?`<div class="big">P${bestB.e.rank}</div><small>Best: ${esc(bestB.b.section)}<br>${esc(bestB.b.type)}</small>`:'<small>Unranked</small>'}</div>
+      <div class="box">${bestB?`<div class="big" style="--n:${String(bestB.e.rank).length+1}">P${bestB.e.rank}</div><small>Best: ${esc(bestB.b.section)}<br>${esc(bestB.b.type)}</small>`:'<small>Unranked</small>'}</div>
     </div>
     <div class="foot">Generated ${new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}</div>
   </div></article>`;
